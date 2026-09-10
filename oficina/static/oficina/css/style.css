@@ -1,12 +1,32 @@
+:root {
+    --cor-primaria: #1E293B;
+    --cor-primaria-escura: #0F172A;
+    --cor-destaque: #DC2626;
+    --cor-destaque-escura: #B91C1C;
+    --cor-accent: #2563EB;
+    --cor-fundo: #F8FAFC;
+    --cor-fundo-secundario: #E2E8F0;
+    --cor-texto-secundario: #475569;
+
+    --font-base: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: #f7f8fa;
-    color: #1f2933;
+    font-family: var(--font-base);
+    background: var(--cor-fundo);
+    color: var(--cor-primaria-escura);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-base);
+    font-weight: 700;
+    color: var(--cor-primaria-escura);
 }
 
 a {
@@ -21,15 +41,16 @@ a {
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    background: var(--cor-primaria-escura);
 }
 
 .login-card {
     background: #fff;
     padding: 2.5rem;
     border-radius: 10px;
-    border: 1px solid #e5e7eb;
     width: 100%;
     max-width: 340px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
 }
 
 .login-card h1 {
@@ -39,37 +60,48 @@ a {
 
 .login-card .subtitle {
     margin: 0 0 1.5rem;
-    color: #6b7280;
+    color: var(--cor-texto-secundario);
 }
 
 .login-card label {
     display: block;
     margin-bottom: 0.3rem;
     font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--cor-primaria);
 }
 
 .login-card input {
     width: 100%;
     padding: 0.6rem 0.75rem;
     margin-bottom: 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--cor-fundo-secundario);
     border-radius: 6px;
+    font-family: var(--font-base);
     font-size: 1rem;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: var(--cor-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .login-card button {
     width: 100%;
     padding: 0.7rem;
-    background: #111827;
+    background: var(--cor-destaque);
     color: #fff;
     border: none;
     border-radius: 6px;
+    font-family: var(--font-base);
+    font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
 }
 
 .login-card button:hover {
-    background: #000;
+    background: var(--cor-destaque-escura);
 }
 
 /* Alerts */
@@ -105,14 +137,14 @@ a {
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
     padding: 1rem 1.5rem;
-    background: #fff;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--cor-primaria-escura);
 }
 
 .navbar .brand {
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     margin-right: auto;
+    color: #fff;
 }
 
 .nav-links {
@@ -124,22 +156,27 @@ a {
 
 .nav-links a {
     text-decoration: none;
-    color: #374151;
+    color: #cbd5e1;
     font-size: 0.95rem;
+    font-weight: 500;
 }
 
 .nav-links a:hover {
-    color: #111827;
+    color: var(--cor-accent);
 }
 
 .nav-user {
-    color: #9ca3af;
+    color: #64748b;
     font-size: 0.9rem;
 }
 
 .nav-toggle,
 .nav-burger {
     display: none;
+}
+
+.nav-burger {
+    color: #fff;
 }
 
 /* Page layout */
@@ -174,7 +211,7 @@ a {
 
 .clock {
     font-variant-numeric: tabular-nums;
-    color: #6b7280;
+    color: var(--cor-texto-secundario);
     margin: -1rem 0 1.5rem;
 }
 
@@ -189,17 +226,19 @@ a {
 .card {
     display: block;
     background: #fff;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--cor-fundo-secundario);
     border-radius: 8px;
     padding: 1.5rem;
     text-align: center;
     text-decoration: none;
-    font-weight: 500;
-    color: #111827;
+    font-weight: 600;
+    color: var(--cor-primaria-escura);
+    transition: border-color 0.15s ease;
 }
 
 .card:hover {
-    border-color: #111827;
+    border-color: var(--cor-accent);
+    color: var(--cor-accent);
 }
 
 /* Buttons */
@@ -207,28 +246,31 @@ a {
 .btn {
     display: inline-block;
     padding: 0.55rem 1rem;
-    background: #111827;
+    background: var(--cor-destaque);
     color: #fff;
     border: none;
     border-radius: 6px;
+    font-family: var(--font-base);
+    font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
     cursor: pointer;
 }
 
 .btn:hover {
-    background: #000;
+    background: var(--cor-destaque-escura);
 }
 
 .btn-secondary {
     background: transparent;
-    color: #374151;
-    border: 1px solid #d1d5db;
+    color: var(--cor-texto-secundario);
+    border: 1px solid var(--cor-fundo-secundario);
+    font-weight: 500;
 }
 
 .btn-secondary:hover {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--cor-fundo-secundario);
+    color: var(--cor-primaria-escura);
 }
 
 /* Table */
@@ -236,7 +278,7 @@ a {
 .table-wrap {
     overflow-x: auto;
     background: #fff;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--cor-fundo-secundario);
     border-radius: 8px;
 }
 
@@ -249,13 +291,14 @@ table {
 th, td {
     text-align: left;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #f0f1f3;
+    border-bottom: 1px solid var(--cor-fundo-secundario);
     font-size: 0.92rem;
 }
 
 th {
-    color: #6b7280;
-    font-weight: 500;
+    color: var(--cor-texto-secundario);
+    font-weight: 600;
+    background: var(--cor-fundo-secundario);
 }
 
 tr:last-child td {
@@ -264,7 +307,7 @@ tr:last-child td {
 
 .empty {
     text-align: center;
-    color: #9ca3af;
+    color: var(--cor-texto-secundario);
     padding: 1.5rem;
 }
 
@@ -272,7 +315,7 @@ tr:last-child td {
 
 .form-card {
     background: #fff;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--cor-fundo-secundario);
     border-radius: 8px;
     padding: 1.5rem;
 }
@@ -285,27 +328,36 @@ tr:last-child td {
     display: block;
     margin-bottom: 0.3rem;
     font-size: 0.9rem;
-    color: #374151;
+    font-weight: 500;
+    color: var(--cor-primaria);
 }
 
 .form-card input,
 .form-card select {
     width: 100%;
     padding: 0.55rem 0.7rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--cor-fundo-secundario);
     border-radius: 6px;
+    font-family: var(--font-base);
     font-size: 1rem;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: var(--cor-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .form-card .helptext {
     display: block;
     font-size: 0.8rem;
-    color: #9ca3af;
+    color: var(--cor-texto-secundario);
     margin-top: 0.25rem;
 }
 
 .form-card ul.errorlist {
-    color: #991b1b;
+    color: var(--cor-destaque-escura);
     font-size: 0.85rem;
     margin: 0.25rem 0;
     padding-left: 1.1rem;
