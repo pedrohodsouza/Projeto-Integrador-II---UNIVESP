@@ -9,12 +9,23 @@
         <p id="clock" class="clock"></p>
     </div>
 
-    <div class="mobile-menu">
-        {% include "oficina/_menu.html" %}
-    </div>
-
-    <div class="desktop-welcome">
-        <p>Selecione uma opção no menu ao lado para começar.</p>
+    <div class="group-card">
+        <a href="{% url 'cliente_list' %}" class="group-row is-link">
+            <span class="row-icon row-icon--blue">👤</span>
+            <span class="row-text">
+                <span class="row-title">Clientes</span>
+                <span class="row-subtitle">{{ cliente_count }} cadastrado{{ cliente_count|pluralize }}</span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+        <a href="{% url 'veiculo_list' %}" class="group-row is-link">
+            <span class="row-icon row-icon--slate">🚗</span>
+            <span class="row-text">
+                <span class="row-title">Veículos</span>
+                <span class="row-subtitle">{{ veiculo_count }} cadastrado{{ veiculo_count|pluralize }}</span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
     </div>
 </div>
 {% endblock %}

@@ -46,14 +46,15 @@ Ao estilizar novos componentes, usar estas variáveis (definidas em `oficina/sta
 
 ## Padrão de Navegação
 
-O sistema segue uma organização inspirada nos menus da Apple (estilo Ajustes do iOS/iPadOS):
+O sistema segue uma organização inspirada na Apple (barra superior com menu de conta, ao estilo macOS/iOS):
 
-- **Listas agrupadas**: opções organizadas em grupos com título (`Conta`, `Cadastros`, `Administração`), cada grupo em um card branco arredondado (`.group-card`), com linhas (`.group-row`) separadas por divisores finos.
-- **Linhas de navegação**: ícone colorido à esquerda, título + subtítulo (contagem de registros) ao centro, chevron `›` à direita indicando que a linha leva a outra tela.
-- **Sidebar persistente** em telas ≥768px (`.sidebar`), reaproveitando o mesmo menu agrupado. Em telas menores, o menu aparece como conteúdo da tela inicial, e as demais páginas mostram um link "‹ Início" no topo para voltar (equivalente ao "back" de navegação em pilha do iOS).
-- **Listagens de dados** (clientes, veículos, usuários) reaproveitam os mesmos componentes de lista agrupada (`.group-card` / `.group-row`) em vez de tabelas, mantendo consistência visual e melhor comportamento em mobile.
+- **Barra superior (`.topbar`)**: fixa no topo, fundo Azul Mecânico. À esquerda, o nome do sistema (link para o Início). À direita, o avatar do usuário.
+- **Menu do usuário (`.user-menu` / `.user-dropdown`)**: ao clicar no avatar, abre um dropdown no canto superior direito com os dados da conta e os itens de administração/sistema — hoje: **Usuários** (somente para administradores), **Configurações** e **Sair**. Esse é o lugar para qualquer opção de gestão do sistema em si (não do dia a dia operacional da oficina).
+- **Conteúdo principal**: a tela inicial (`home.html`) traz as opções operacionais do dia a dia — hoje **Clientes** e **Veículos** — como uma lista agrupada (`.group-card` / `.group-row`), com ícone colorido, título, subtítulo (contagem de registros) e chevron `›` indicando navegação. Novas funcionalidades de uso frequente (ex.: Ordens de Serviço) devem entrar aqui, não no menu do usuário.
+- **Navegação em pilha**: páginas que não são a Início mostram um link "‹ Início" no topo do conteúdo para voltar, como no padrão de navegação por pilha do iOS.
+- **Listagens de dados** (clientes, veículos, usuários) usam os mesmos componentes de lista agrupada (`.group-card` / `.group-row`) em vez de tabelas, mantendo consistência visual e melhor comportamento em mobile.
 
-Ao adicionar novas seções ao sistema, mantenha esse padrão: agrupar por contexto, usar `.group-card`/`.group-row` para listas, e evitar reintroduzir menus de navegação em barra horizontal solta.
+Regra geral: **opções de gestão do sistema/conta** → menu do usuário (canto superior direito). **Opções operacionais da oficina** → lista principal da tela inicial.
 
 ## Diretrizes de uso
 

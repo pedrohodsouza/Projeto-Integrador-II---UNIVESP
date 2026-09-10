@@ -35,6 +35,11 @@ def home_view(request):
 
 
 @login_required
+def configuracoes_view(request):
+    return render(request, 'oficina/configuracoes.html')
+
+
+@login_required
 def cliente_list(request):
     clientes = Cliente.objects.all()
     return render(request, 'oficina/cliente_list.html', {'clientes': clientes})
