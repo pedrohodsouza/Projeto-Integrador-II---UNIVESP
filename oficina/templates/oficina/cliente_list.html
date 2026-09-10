@@ -1,0 +1,37 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}Clientes - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<main class="page">
+    <div class="page-header">
+        <h1>Clientes</h1>
+        <a class="btn" href="{% url 'cliente_create' %}">+ Novo cliente</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.telefone|default:"-" }}</td>
+                    <td>{{ cliente.email|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="empty">Nenhum cliente cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

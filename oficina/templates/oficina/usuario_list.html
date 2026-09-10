@@ -1,0 +1,39 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}Usuários - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<main class="page">
+    <div class="page-header">
+        <h1>Usuários</h1>
+        <a class="btn" href="{% url 'usuario_create' %}">+ Novo usuário</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.first_name|default:"-" }}</td>
+                    <td>{{ usuario.email|default:"-" }}</td>
+                    <td>{% if usuario.is_active %}Ativo{% else %}Inativo{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="empty">Nenhum usuário cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

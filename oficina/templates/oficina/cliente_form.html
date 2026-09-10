@@ -1,0 +1,17 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}Novo cliente - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<main class="page page-narrow">
+    <h1>Novo cliente</h1>
+    <form class="form-card" method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <a class="btn btn-secondary" href="{% url 'cliente_list' %}">Cancelar</a>
+            <button type="submit" class="btn">Salvar</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

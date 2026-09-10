@@ -10,12 +10,6 @@
         <h1>Oficina Mecânica</h1>
         <p class="subtitle">Acesse o sistema</p>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
         <label for="username">Usuário</label>
         <input type="text" id="username" name="username" autocomplete="username" required autofocus>
 
