@@ -3,16 +3,16 @@
 {% block title %}Início - Oficina Mecânica{% endblock %}
 
 {% block content %}
-<header class="topbar">
-    <h1>Oficina Mecânica</h1>
-    <div class="user-info">
-        <span>Olá, {{ user.get_username }}</span>
-        <a href="{% url 'logout' %}">Sair</a>
-    </div>
-</header>
-
-<main class="dashboard">
-    <p>Bem-vindo(a)! A partir daqui você poderá gerenciar clientes, veículos e ordens de serviço.</p>
+<main class="page">
+    <h1>Início</h1>
     <p id="clock" class="clock"></p>
+
+    <div class="card-grid">
+        <a class="card" href="{% url 'cliente_list' %}">Clientes</a>
+        <a class="card" href="{% url 'veiculo_list' %}">Veículos</a>
+        {% if user.is_staff %}
+            <a class="card" href="{% url 'usuario_list' %}">Usuários</a>
+        {% endif %}
+    </div>
 </main>
 {% endblock %}
