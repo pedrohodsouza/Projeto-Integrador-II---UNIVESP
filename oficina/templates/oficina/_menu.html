@@ -1,0 +1,50 @@
+{% load static %}
+<div class="menu">
+    <div class="group-title">Conta</div>
+    <div class="group-card">
+        <div class="group-row">
+            <span class="row-avatar">{{ user.get_username|first|upper }}</span>
+            <span class="row-text">
+                <span class="row-title">{{ user.get_username }}</span>
+                <span class="row-subtitle">{% if user.is_staff %}Administrador{% else %}Usuário{% endif %}</span>
+            </span>
+        </div>
+        <a href="{% url 'logout' %}" class="group-row is-link is-danger">
+            <span class="row-title">Sair</span>
+        </a>
+    </div>
+
+    <div class="group-title">Cadastros</div>
+    <div class="group-card">
+        <a href="{% url 'cliente_list' %}" class="group-row is-link{% if request.resolver_match.url_name in 'cliente_list,cliente_create' %} is-active{% endif %}">
+            <span class="row-icon row-icon--blue">👤</span>
+            <span class="row-text">
+                <span class="row-title">Clientes</span>
+                <span class="row-subtitle">{{ cliente_count }} cadastrado{{ cliente_count|pluralize }}</span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+        <a href="{% url 'veiculo_list' %}" class="group-row is-link{% if request.resolver_match.url_name in 'veiculo_list,veiculo_create' %} is-active{% endif %}">
+            <span class="row-icon row-icon--slate">🚗</span>
+            <span class="row-text">
+                <span class="row-title">Veículos</span>
+                <span class="row-subtitle">{{ veiculo_count }} cadastrado{{ veiculo_count|pluralize }}</span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+    </div>
+
+    {% if user.is_staff %}
+    <div class="group-title">Administração</div>
+    <div class="group-card">
+        <a href="{% url 'usuario_list' %}" class="group-row is-link{% if request.resolver_match.url_name in 'usuario_list,usuario_create' %} is-active{% endif %}">
+            <span class="row-icon row-icon--dark">⚙️</span>
+            <span class="row-text">
+                <span class="row-title">Usuários</span>
+                <span class="row-subtitle">{{ usuario_count }} cadastrado{{ usuario_count|pluralize }}</span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+    </div>
+    {% endif %}
+</div>
