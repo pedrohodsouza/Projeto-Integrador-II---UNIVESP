@@ -1,0 +1,28 @@
+{% extends "oficina/base.html" %}
+{% load static %}
+
+{% block title %}Login - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <form class="login-card" method="post" novalidate>
+        {% csrf_token %}
+        <h1>Oficina Mecânica</h1>
+        <p class="subtitle">Acesse o sistema</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <label for="username">Usuário</label>
+        <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+{% endblock %}

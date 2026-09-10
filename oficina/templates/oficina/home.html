@@ -1,0 +1,18 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}Início - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<header class="topbar">
+    <h1>Oficina Mecânica</h1>
+    <div class="user-info">
+        <span>Olá, {{ user.get_username }}</span>
+        <a href="{% url 'logout' %}">Sair</a>
+    </div>
+</header>
+
+<main class="dashboard">
+    <p>Bem-vindo(a)! A partir daqui você poderá gerenciar clientes, veículos e ordens de serviço.</p>
+    <p id="clock" class="clock"></p>
+</main>
+{% endblock %}
