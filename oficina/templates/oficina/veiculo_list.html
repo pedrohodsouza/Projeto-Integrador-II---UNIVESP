@@ -3,37 +3,27 @@
 {% block title %}Veículos - Oficina Mecânica{% endblock %}
 
 {% block content %}
-<main class="page">
+<div class="page">
     <div class="page-header">
         <h1>Veículos</h1>
         <a class="btn" href="{% url 'veiculo_create' %}">+ Novo veículo</a>
     </div>
 
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Placa</th>
-                    <th>Marca / Modelo</th>
-                    <th>Ano</th>
-                    <th>Cliente</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for veiculo in veiculos %}
-                <tr>
-                    <td>{{ veiculo.placa }}</td>
-                    <td>{{ veiculo.marca }} {{ veiculo.modelo }}</td>
-                    <td>{{ veiculo.ano|default:"-" }}</td>
-                    <td>{{ veiculo.cliente.nome }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="empty">Nenhum veículo cadastrado.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="group-card">
+        {% for veiculo in veiculos %}
+        <div class="group-row">
+            <span class="row-icon row-icon--slate">🚗</span>
+            <span class="row-text">
+                <span class="row-title">{{ veiculo.placa }}</span>
+                <span class="row-subtitle">{{ veiculo.marca }} {{ veiculo.modelo }}{% if veiculo.ano %} · {{ veiculo.ano }}{% endif %}</span>
+            </span>
+            <span class="row-trailing">{{ veiculo.cliente.nome }}</span>
+        </div>
+        {% empty %}
+        <div class="group-row group-row--empty">
+            <span class="row-subtitle">Nenhum veículo cadastrado.</span>
+        </div>
+        {% endfor %}
     </div>
-</main>
+</div>
 {% endblock %}

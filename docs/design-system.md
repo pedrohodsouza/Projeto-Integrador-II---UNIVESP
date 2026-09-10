@@ -44,6 +44,17 @@ Ao estilizar novos componentes, usar estas variáveis (definidas em `oficina/sta
 }
 ```
 
+## Padrão de Navegação
+
+O sistema segue uma organização inspirada nos menus da Apple (estilo Ajustes do iOS/iPadOS):
+
+- **Listas agrupadas**: opções organizadas em grupos com título (`Conta`, `Cadastros`, `Administração`), cada grupo em um card branco arredondado (`.group-card`), com linhas (`.group-row`) separadas por divisores finos.
+- **Linhas de navegação**: ícone colorido à esquerda, título + subtítulo (contagem de registros) ao centro, chevron `›` à direita indicando que a linha leva a outra tela.
+- **Sidebar persistente** em telas ≥768px (`.sidebar`), reaproveitando o mesmo menu agrupado. Em telas menores, o menu aparece como conteúdo da tela inicial, e as demais páginas mostram um link "‹ Início" no topo para voltar (equivalente ao "back" de navegação em pilha do iOS).
+- **Listagens de dados** (clientes, veículos, usuários) reaproveitam os mesmos componentes de lista agrupada (`.group-card` / `.group-row`) em vez de tabelas, mantendo consistência visual e melhor comportamento em mobile.
+
+Ao adicionar novas seções ao sistema, mantenha esse padrão: agrupar por contexto, usar `.group-card`/`.group-row` para listas, e evitar reintroduzir menus de navegação em barra horizontal solta.
+
 ## Diretrizes de uso
 
 - **Navegação e cabeçalhos**: usar Azul Mecânico (`--cor-primaria` / `--cor-primaria-escura`).

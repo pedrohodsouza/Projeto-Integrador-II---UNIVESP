@@ -3,37 +3,27 @@
 {% block title %}Usuários - Oficina Mecânica{% endblock %}
 
 {% block content %}
-<main class="page">
+<div class="page">
     <div class="page-header">
         <h1>Usuários</h1>
         <a class="btn" href="{% url 'usuario_create' %}">+ Novo usuário</a>
     </div>
 
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Usuário</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for usuario in usuarios %}
-                <tr>
-                    <td>{{ usuario.username }}</td>
-                    <td>{{ usuario.first_name|default:"-" }}</td>
-                    <td>{{ usuario.email|default:"-" }}</td>
-                    <td>{% if usuario.is_active %}Ativo{% else %}Inativo{% endif %}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="empty">Nenhum usuário cadastrado.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="group-card">
+        {% for usuario in usuarios %}
+        <div class="group-row">
+            <span class="row-icon row-icon--dark">⚙️</span>
+            <span class="row-text">
+                <span class="row-title">{{ usuario.username }}</span>
+                <span class="row-subtitle">{{ usuario.first_name|default:usuario.email|default:"Sem dados adicionais" }}</span>
+            </span>
+            <span class="row-trailing">{% if usuario.is_active %}Ativo{% else %}Inativo{% endif %}</span>
+        </div>
+        {% empty %}
+        <div class="group-row group-row--empty">
+            <span class="row-subtitle">Nenhum usuário cadastrado.</span>
+        </div>
+        {% endfor %}
     </div>
-</main>
+</div>
 {% endblock %}

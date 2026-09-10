@@ -3,16 +3,18 @@
 {% block title %}Início - Oficina Mecânica{% endblock %}
 
 {% block content %}
-<main class="page">
-    <h1>Início</h1>
-    <p id="clock" class="clock"></p>
-
-    <div class="card-grid">
-        <a class="card" href="{% url 'cliente_list' %}">Clientes</a>
-        <a class="card" href="{% url 'veiculo_list' %}">Veículos</a>
-        {% if user.is_staff %}
-            <a class="card" href="{% url 'usuario_list' %}">Usuários</a>
-        {% endif %}
+<div class="page">
+    <div class="page-title-block">
+        <h1>Início</h1>
+        <p id="clock" class="clock"></p>
     </div>
-</main>
+
+    <div class="mobile-menu">
+        {% include "oficina/_menu.html" %}
+    </div>
+
+    <div class="desktop-welcome">
+        <p>Selecione uma opção no menu ao lado para começar.</p>
+    </div>
+</div>
 {% endblock %}
