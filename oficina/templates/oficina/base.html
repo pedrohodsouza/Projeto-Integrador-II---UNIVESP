@@ -13,32 +13,50 @@
 <body>
     {% if user.is_authenticated %}
     <header class="topbar">
-        <span class="topbar-title">Oficina Mecânica</span>
+        <a href="{% url 'home' %}" class="topbar-title">Oficina Mecânica</a>
+
+        <div class="user-menu">
+            <button type="button" class="user-menu-toggle" id="user-menu-toggle" aria-haspopup="true" aria-expanded="false">
+                <span class="row-avatar">{{ user.get_username|first|upper }}</span>
+            </button>
+            <div class="user-dropdown" id="user-dropdown">
+                <div class="dropdown-account">
+                    <span class="row-title">{{ user.get_username }}</span>
+                    <span class="row-subtitle">{% if user.is_staff %}Administrador{% else %}Usuário{% endif %}</span>
+                </div>
+                {% if user.is_staff %}
+                <a href="{% url 'usuario_list' %}" class="dropdown-item">
+                    <span class="row-icon row-icon--dark">👥</span>
+                    Usuários
+                </a>
+                {% endif %}
+                <a href="{% url 'configuracoes' %}" class="dropdown-item">
+                    <span class="row-icon row-icon--slate">⚙️</span>
+                    Configurações
+                </a>
+                <a href="{% url 'logout' %}" class="dropdown-item is-danger">
+                    <span class="row-icon row-icon--red">🚪</span>
+                    Sair
+                </a>
+            </div>
+        </div>
     </header>
     {% endif %}
 
-    <div class="app-shell{% if not user.is_authenticated %} app-shell--guest{% endif %}">
-        {% if user.is_authenticated %}
-        <aside class="sidebar">
-            {% include "oficina/_menu.html" %}
-        </aside>
+    <div class="content-area{% if not user.is_authenticated %} content-area--guest{% endif %}">
+        {% if user.is_authenticated and request.resolver_match.url_name != 'home' %}
+            <a href="{% url 'home' %}" class="back-link">‹ Início</a>
         {% endif %}
 
-        <div class="content-area">
-            {% if user.is_authenticated and request.resolver_match.url_name != 'home' %}
-                <a href="{% url 'home' %}" class="back-link">‹ Início</a>
-            {% endif %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-            {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% block content %}{% endblock %}
-        </div>
+        {% block content %}{% endblock %}
     </div>
 
     <script src="{% static 'oficina/js/main.js' %}"></script>
