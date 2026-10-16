@@ -1106,3 +1106,21 @@ select.combobox-original {
     font-size: 0.85rem;
     color: var(--cor-texto-secundario);
 }
+
+/* Erros de formulário */
+
+.form-erros ul {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+}
+
+.form-card .campo-com-erro label {
+    color: var(--cor-destaque-escura);
+}
+
+.form-card .campo-com-erro input,
+.form-card .campo-com-erro select,
+.form-card .campo-com-erro textarea {
+    border-color: var(--cor-destaque);
+    background: #fff5f5;
+}
