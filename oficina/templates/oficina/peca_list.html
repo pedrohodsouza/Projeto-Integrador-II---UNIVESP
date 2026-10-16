@@ -36,7 +36,7 @@
 
         <div class="toolbar">
             <input class="search-input" type="search" v-model="busca"
-                   placeholder="Buscar por código, nome, fabricante, fornecedor ou localização..." aria-label="Buscar peças">
+                   placeholder="Buscar por código, cód. do fabricante, nome, fabricante, fornecedor ou localização..." aria-label="Buscar peças">
             <select v-model="filtroCategoria" aria-label="Filtrar por categoria">
                 <option value="">Todas as categorias</option>
                 <option v-for="c in categorias" :key="c" :value="c">[[ c ]]</option>
@@ -81,7 +81,7 @@
                         <td><a :href="p.id + '/'">[[ p.codigo ]]</a></td>
                         <td>
                             <strong>[[ p.nome ]]</strong>
-                            <br><span class="muted">[[ [p.fabricante, p.fornecedor].filter(Boolean).join(' · ') || '-' ]]</span>
+                            <br><span class="muted">[[ [p.referencia && ('Ref. ' + p.referencia), p.fabricante, p.fornecedor].filter(Boolean).join(' · ') || '-' ]]</span>
                         </td>
                         <td>[[ p.categoria || '-' ]]</td>
                         <td>[[ p.localizacao || '-' ]]</td>
@@ -108,6 +108,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
 <script src="{% static 'oficina/js/estoque-vue.js' %}"></script>
 {% endblock %}

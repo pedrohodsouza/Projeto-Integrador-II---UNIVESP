@@ -38,7 +38,7 @@ class FornecedorAdmin(admin.ModelAdmin):
 class PecaAdmin(admin.ModelAdmin):
     list_display = ['codigo', 'nome', 'categoria', 'estoque_atual', 'estoque_minimo', 'preco_venda', 'ativo']
     list_filter = ['categoria', 'ativo']
-    search_fields = ['codigo', 'nome', 'fabricante']
+    search_fields = ['nome', 'referencia', 'fabricante']
     readonly_fields = ['estoque_atual']
 
 

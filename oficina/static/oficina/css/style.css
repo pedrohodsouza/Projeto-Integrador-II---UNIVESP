@@ -999,3 +999,110 @@ a.group-row.is-link:active {
 }
 
 .item-form .span-2 { grid-column: span 2; }
+
+/* Combobox pesquisável (Vue.js) */
+
+select.combobox-original {
+    display: none !important;
+}
+
+.combobox {
+    position: relative;
+    width: 100%;
+}
+
+.combobox-campo {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-card .combobox-entrada,
+.combobox-entrada {
+    width: 100%;
+    padding: 0.6rem 3.6rem 0.6rem 0.75rem;
+    border: 1px solid var(--cor-fundo-secundario);
+    background: var(--cor-fundo);
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-size: 1rem;
+    text-overflow: ellipsis;
+}
+
+.combobox-entrada:focus {
+    outline: none;
+    border-color: var(--cor-accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.combobox-seta,
+.combobox-limpar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cor-texto-secundario);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.combobox-seta {
+    right: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.combobox-limpar {
+    right: 2rem;
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    padding: 0.1rem 0.3rem;
+}
+
+.combobox-limpar:hover { color: var(--cor-destaque); }
+
+.combobox.is-aberto .combobox-seta { transform: translateY(-50%) rotate(180deg); }
+
+.combobox-lista {
+    position: absolute;
+    z-index: 50;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid var(--cor-fundo-secundario);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+}
+
+.combobox-opcao {
+    padding: 0.5rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    color: var(--cor-primaria-escura);
+}
+
+.combobox-opcao.is-ativa { background: var(--cor-fundo-secundario); }
+
+.combobox-opcao.is-selecionada {
+    font-weight: 600;
+    color: var(--cor-accent);
+}
+
+.combobox-opcao mark {
+    background: #FEF08A;
+    color: inherit;
+    border-radius: 2px;
+}
+
+.combobox-vazio {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+}

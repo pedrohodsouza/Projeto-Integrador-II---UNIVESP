@@ -18,9 +18,10 @@ Este projeto consiste em um **Sistema Web de Gestão para Oficinas Mecânicas**,
   - O Vue é carregado via CDN (sem etapa de build) e usado em:
     - **Painel de Atendimentos:** quadro por etapa (estilo kanban) ou lista, com indicadores clicáveis (em aberto, em execução, prontos, atrasados), busca e filtros por etapa, prioridade e mecânico.
     - **Painel de Estoque:** indicadores (peças, valor em estoque, abaixo do mínimo, sem estoque), busca, filtros por categoria e situação, e ordenação.
+    - **Combobox pesquisável:** todo campo que referencia outro cadastro (cliente, veículo, mecânico, peça, fornecedor) mostra apenas o que já está cadastrado e permite digitar para filtrar, com navegação por teclado e destaque do termo buscado. Categoria e fabricante da peça sugerem os valores já usados.
     - **Listagens de Clientes, Veículos e Fornecedores:** busca em tempo real (ignora acentos e maiúsculas).
   - Os dados são enviados pelo Django com o filtro `json_script` e renderizados pelo Vue no navegador. Para não conflitar com a sintaxe `{{ }}` do Django, o Vue usa os delimitadores `[[ ]]`.
-  - Código em `oficina/static/oficina/js/` (`atendimentos-vue.js`, `estoque-vue.js` e `lista-vue.js`).
+  - Código em `oficina/static/oficina/js/` (`atendimentos-vue.js`, `estoque-vue.js`, `lista-vue.js` e `combobox-vue.js`).
 - **Banco de Dados:** SQLite (ambiente de desenvolvimento).
 
 ## Como Executar Localmente
@@ -74,6 +75,7 @@ python manage.py test oficina
   - Alertas de peças abaixo do mínimo ou sem estoque (também na tela inicial).
   - Histórico geral de movimentações, com filtro por tipo.
 - **Cadastro de Fornecedores:** nome, CNPJ, contato, telefone, e-mail e observações, com a quantidade de peças vinculadas.
+- **Códigos automáticos:** todo cadastro recebe um código gerado pelo sistema a partir da chave primária, sem digitação: clientes `CLI-00001`, veículos `VEI-00001`, fornecedores `FOR-00001`, peças `PEC-00001` e ordens de serviço `OS-00001`. Na peça, o código do catálogo do fabricante pode ser informado à parte (opcional).
 - **Busca em tempo real (Vue.js):** Pesquisa instantânea nas listagens de clientes e veículos, sem recarregar a página.
 
 ## Autores

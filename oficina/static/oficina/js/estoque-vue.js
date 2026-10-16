@@ -50,12 +50,12 @@
                     if (this.filtroSituacao === 'repor' && this.situacao(p) === 'ok') return false;
                     if (this.filtroSituacao && this.filtroSituacao !== 'repor' && this.situacao(p) !== this.filtroSituacao) return false;
                     if (!termo) return true;
-                    return [p.codigo, p.nome, p.categoria, p.fabricante, p.fornecedor, p.localizacao]
+                    return [p.codigo, p.referencia, p.nome, p.categoria, p.fabricante, p.fornecedor, p.localizacao]
                         .some((campo) => normalizar(campo).includes(termo));
                 });
                 const criterios = {
                     nome: (a, b) => a.nome.localeCompare(b.nome, 'pt-BR'),
-                    codigo: (a, b) => a.codigo.localeCompare(b.codigo, 'pt-BR'),
+                    codigo: (a, b) => a.id - b.id,
                     estoque: (a, b) => a.estoque - b.estoque,
                     valor: (a, b) => b.estoque * b.custo - a.estoque * a.custo,
                 };

@@ -5,6 +5,7 @@
 {% block content %}
 <main class="page">
     <h1>{% if peca %}Editar {{ peca.nome }}{% else %}Nova peça{% endif %}</h1>
+    {% if peca %}<p class="muted">Código: <strong>{{ peca.codigo }}</strong></p>{% else %}<p class="muted">O código da peça (PEC-00000) é gerado automaticamente ao salvar.</p>{% endif %}
     <form class="form-card" method="post" novalidate>
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -20,6 +21,9 @@
         </div>
         <datalist id="categorias">
             {% for categoria in form.categorias %}<option value="{{ categoria }}">{% endfor %}
+        </datalist>
+        <datalist id="fabricantes">
+            {% for fabricante in form.fabricantes %}<option value="{{ fabricante }}">{% endfor %}
         </datalist>
         {% if peca %}
         <p class="muted">O estoque atual ({{ peca.estoque_atual|floatformat:"-2" }} {{ peca.unidade }}) só muda por movimentações, para manter o histórico.</p>

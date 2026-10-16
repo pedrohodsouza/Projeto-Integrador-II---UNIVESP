@@ -158,3 +158,21 @@
 </div>
 {% endwith %}
 {% endblock %}
+
+{% block extra_js %}
+{{ precos_pecas|json_script:"precos-pecas" }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const peca = document.getElementById('id_peca');
+        if (!peca) return;
+        const precos = JSON.parse(document.getElementById('precos-pecas').textContent);
+        peca.addEventListener('change', () => {
+            const dados = precos[peca.value];
+            if (!dados) return;
+            document.getElementById('id_tipo').value = 'peca';
+            document.getElementById('id_descricao').value = dados.nome;
+            document.getElementById('id_valor_unitario').value = dados.preco;
+        });
+    });
+</script>
+{% endblock %}

@@ -5,6 +5,13 @@ from django import forms
 from .models import Atendimento, Cliente, Fornecedor, ItemAtendimento, MovimentacaoEstoque, Peca, Veiculo
 
 
+class ComboboxSelect(forms.Select):
+    """Select que o front-end (combobox-vue.js) transforma em campo pesquisável."""
+
+    def __init__(self, attrs=None, choices=()):
+        super().__init__({'data-combobox': '', **(attrs or {})}, choices)
+
+
 class UsuarioForm(UserCreationForm):
     class Meta:
         model = User
@@ -18,7 +25,9 @@ class ClienteForm(forms.ModelForm):
 
 
 class VeiculoForm(forms.ModelForm):
-    cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), empty_label='Selecione um cliente')
+    cliente = forms.ModelChoiceField(
+        queryset=Cliente.objects.all(), empty_label='Selecione um cliente', widget=ComboboxSelect,
+    )
 
     class Meta:
         model = Veiculo
@@ -27,22 +36,23 @@ class VeiculoForm(forms.ModelForm):
 
 class VeiculoChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return f'{obj.placa} - {obj.marca} {obj.modelo} ({obj.cliente.nome})'
+        return f'{obj.placa} - {obj.marca} {obj.modelo} · {obj.cliente.nome} ({obj.codigo})'
 
 
 class ResponsavelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return obj.get_full_name() or obj.username
+        nome = obj.get_full_name()
+        return f'{nome} ({obj.username})' if nome else obj.username
 
 
 class AtendimentoForm(forms.ModelForm):
     veiculo = VeiculoChoiceField(
         queryset=Veiculo.objects.select_related('cliente'),
-        empty_label='Selecione um veículo', label='Veículo',
+        empty_label='Selecione um veículo', label='Veículo', widget=ComboboxSelect,
     )
     responsavel = ResponsavelChoiceField(
         queryset=User.objects.filter(is_active=True).order_by('first_name', 'username'),
-        required=False, empty_label='Sem responsável', label='Mecânico responsável',
+        required=False, empty_label='Sem responsável', label='Mecânico responsável', widget=ComboboxSelect,
     )
 
     class Meta:
@@ -70,13 +80,17 @@ class StatusAtendimentoForm(forms.Form):
 
 class PecaChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return f'{obj.codigo} - {obj.nome} (estoque: {obj.estoque_atual:g} {obj.unidade} · R$ {obj.preco_venda})'
+        referencia = f' · Ref. {obj.referencia}' if obj.referencia else ''
+        return (
+            f'{obj.codigo} - {obj.nome}{referencia} '
+            f'(estoque: {obj.estoque_atual:g} {obj.unidade} · R$ {obj.preco_venda})'
+        )
 
 
 class ItemAtendimentoForm(forms.ModelForm):
     peca = PecaChoiceField(
         queryset=Peca.objects.filter(ativo=True), required=False,
-        empty_label='Avulsa (fora do estoque)', label='Peça do estoque',
+        empty_label='Avulsa (fora do estoque)', label='Peça do estoque', widget=ComboboxSelect,
     )
 
     class Meta:
@@ -116,6 +130,7 @@ class FornecedorForm(forms.ModelForm):
 class PecaForm(forms.ModelForm):
     fornecedor = forms.ModelChoiceField(
         queryset=Fornecedor.objects.all(), required=False, empty_label='Nenhum', label='Fornecedor principal',
+        widget=ComboboxSelect,
     )
     estoque_inicial = forms.DecimalField(
         required=False, min_value=0, decimal_places=2, label='Estoque inicial',
@@ -125,7 +140,7 @@ class PecaForm(forms.ModelForm):
     class Meta:
         model = Peca
         fields = [
-            'codigo', 'nome', 'categoria', 'fabricante', 'unidade', 'fornecedor',
+            'nome', 'referencia', 'categoria', 'fabricante', 'unidade', 'fornecedor',
             'preco_custo', 'preco_venda', 'estoque_minimo', 'localizacao', 'ativo',
         ]
 
@@ -133,9 +148,14 @@ class PecaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             del self.fields['estoque_inicial']
-        categorias = Peca.objects.exclude(categoria='').values_list('categoria', flat=True).distinct()
-        self.fields['categoria'].widget.attrs['list'] = 'categorias'
-        self.categorias = sorted(set(categorias))
+        self.fields['categoria'].widget.attrs.update({'list': 'categorias', 'autocomplete': 'off'})
+        self.fields['fabricante'].widget.attrs.update({'list': 'fabricantes', 'autocomplete': 'off'})
+        self.categorias = self._valores_existentes('categoria')
+        self.fabricantes = self._valores_existentes('fabricante')
+
+    @staticmethod
+    def _valores_existentes(campo):
+        return sorted(set(Peca.objects.exclude(**{campo: ''}).values_list(campo, flat=True)))
 
 
 class MovimentacaoForm(forms.ModelForm):

@@ -10,9 +10,9 @@
         <a class="btn" href="{% url 'veiculo_create' %}">+ Novo veículo</a>
     </div>
 
-    <div id="lista-app" data-campos="placa,marca,modelo,ano,cliente__nome" v-cloak>
+    <div id="lista-app" data-campos="codigo,placa,marca,modelo,ano,cliente__nome" v-cloak>
         <input class="search-input" type="search" v-model="busca"
-               placeholder="Buscar por placa, marca, modelo ou cliente..." aria-label="Buscar veículos">
+               placeholder="Buscar por código, placa, marca, modelo ou cliente..." aria-label="Buscar veículos">
         <p class="search-count" v-if="busca">[[ filtrados.length ]] de [[ itens.length ]] veículo(s)</p>
 
         <div class="group-card">
@@ -20,7 +20,7 @@
                 <span class="row-icon row-icon--slate">🚗</span>
                 <span class="row-text">
                     <span class="row-title">[[ veiculo.placa ]]</span>
-                    <span class="row-subtitle">[[ veiculo.marca ]] [[ veiculo.modelo ]]<template v-if="veiculo.ano"> · [[ veiculo.ano ]]</template></span>
+                    <span class="row-subtitle">[[ veiculo.codigo ]] · [[ veiculo.marca ]] [[ veiculo.modelo ]]<template v-if="veiculo.ano"> · [[ veiculo.ano ]]</template></span>
                 </span>
                 <span class="row-trailing">[[ veiculo.cliente__nome ]]</span>
             </div>
@@ -34,6 +34,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
 <script src="{% static 'oficina/js/lista-vue.js' %}"></script>
 {% endblock %}

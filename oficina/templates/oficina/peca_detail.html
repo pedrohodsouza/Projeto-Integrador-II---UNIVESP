@@ -30,6 +30,7 @@
                     <div><dt>Localização</dt><dd>{{ peca.localizacao|default:"-" }}</dd></div>
                     <div><dt>Categoria</dt><dd>{{ peca.categoria|default:"-" }}</dd></div>
                     <div><dt>Fabricante</dt><dd>{{ peca.fabricante|default:"-" }}</dd></div>
+                    <div><dt>Código do fabricante</dt><dd>{{ peca.referencia|default:"-" }}</dd></div>
                     <div><dt>Fornecedor principal</dt><dd>
                         {% if peca.fornecedor %}{{ peca.fornecedor.nome }}{% if peca.fornecedor.telefone %}<br><span class="muted">{{ peca.fornecedor.telefone }}</span>{% endif %}{% else %}-{% endif %}
                     </dd></div>

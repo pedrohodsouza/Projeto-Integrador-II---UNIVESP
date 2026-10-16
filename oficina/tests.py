@@ -93,11 +93,11 @@ class EstoqueTests(TestCase):
 
     def cadastrar_peca(self, estoque_inicial='10'):
         self.client.post(reverse('peca_create'), {
-            'codigo': 'OL-5W30', 'nome': 'Óleo 5W30', 'categoria': 'Óleos e fluidos', 'unidade': 'L',
+            'referencia': 'OL-5W30', 'nome': 'Óleo 5W30', 'categoria': 'Óleos e fluidos', 'unidade': 'L',
             'fornecedor': self.fornecedor.pk, 'preco_custo': '30.00', 'preco_venda': '55.00',
             'estoque_minimo': '4', 'ativo': 'on', 'estoque_inicial': estoque_inicial,
         })
-        return Peca.objects.get(codigo='OL-5W30')
+        return Peca.objects.get(referencia='OL-5W30')
 
     def test_cadastro_com_estoque_inicial_gera_entrada(self):
         peca = self.cadastrar_peca()
@@ -173,3 +173,23 @@ class EstoqueTests(TestCase):
             reverse('atendimento_detail', args=[self.atendimento.pk]), reverse('home'),
         ]:
             self.assertEqual(self.client.get(url).status_code, 200, url)
+
+
+class CodigoAutomaticoTests(TestCase):
+    def test_codigos_gerados_a_partir_da_chave_primaria(self):
+        cliente = Cliente.objects.create(nome='Ana')
+        veiculo = Veiculo.objects.create(cliente=cliente, placa='AAA0A00', marca='Ford', modelo='Ka')
+        fornecedor = Fornecedor.objects.create(nome='Distribuidora')
+        peca = Peca.objects.create(nome='Filtro de ar')
+        atendimento = Atendimento.objects.create(veiculo=veiculo, queixa='Revisão')
+
+        self.assertEqual(cliente.codigo, f'CLI-{cliente.pk:05d}')
+        self.assertEqual(veiculo.codigo, f'VEI-{veiculo.pk:05d}')
+        self.assertEqual(fornecedor.codigo, f'FOR-{fornecedor.pk:05d}')
+        self.assertEqual(peca.codigo, f'PEC-{peca.pk:05d}')
+        self.assertEqual(atendimento.codigo, f'OS-{atendimento.pk:05d}')
+        self.assertEqual(atendimento.numero, atendimento.codigo)
+
+    def test_formulario_de_peca_nao_pede_codigo(self):
+        from .forms import PecaForm
+        self.assertNotIn('codigo', PecaForm().fields)

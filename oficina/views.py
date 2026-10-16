@@ -64,7 +64,10 @@ def configuracoes_view(request):
 
 @login_required
 def cliente_list(request):
-    clientes = list(Cliente.objects.values('id', 'nome', 'telefone', 'email'))
+    clientes = [
+        {'id': c.pk, 'codigo': c.codigo, 'nome': c.nome, 'telefone': c.telefone, 'email': c.email}
+        for c in Cliente.objects.all()
+    ]
     return render(request, 'oficina/cliente_list.html', {'clientes': clientes})
 
 
@@ -83,11 +86,13 @@ def cliente_create(request):
 
 @login_required
 def veiculo_list(request):
-    veiculos = list(
-        Veiculo.objects.select_related('cliente').values(
-            'id', 'placa', 'marca', 'modelo', 'ano', 'cliente__nome'
-        )
-    )
+    veiculos = [
+        {
+            'id': v.pk, 'codigo': v.codigo, 'placa': v.placa, 'marca': v.marca, 'modelo': v.modelo,
+            'ano': v.ano, 'cliente__nome': v.cliente.nome,
+        }
+        for v in Veiculo.objects.select_related('cliente')
+    ]
     return render(request, 'oficina/veiculo_list.html', {'veiculos': veiculos})
 
 
@@ -204,6 +209,9 @@ def atendimento_detail(request, pk):
         'etapa_atual': Atendimento.Status.values.index(atendimento.status),
         'status_form': StatusAtendimentoForm(initial={'status': atendimento.status}),
         'item_form': ItemAtendimentoForm(),
+        'precos_pecas': {
+            p.pk: {'nome': p.nome, 'preco': str(p.preco_venda)} for p in Peca.objects.filter(ativo=True)
+        },
         'outros_atendimentos': atendimento.veiculo.atendimentos.exclude(pk=pk)[:5],
     }
     return render(request, 'oficina/atendimento_detail.html', context)
@@ -288,6 +296,7 @@ def peca_list(request):
         {
             'id': p.pk,
             'codigo': p.codigo,
+            'referencia': p.referencia,
             'nome': p.nome,
             'categoria': p.categoria,
             'fabricante': p.fabricante,
@@ -370,11 +379,13 @@ def movimentacao_list(request):
 
 @login_required
 def fornecedor_list(request):
-    fornecedores = list(
-        Fornecedor.objects.annotate(qtd_pecas=Count('pecas')).values(
-            'id', 'nome', 'cnpj', 'contato', 'telefone', 'email', 'qtd_pecas',
-        )
-    )
+    fornecedores = [
+        {
+            'id': f.pk, 'codigo': f.codigo, 'nome': f.nome, 'cnpj': f.cnpj, 'contato': f.contato,
+            'telefone': f.telefone, 'email': f.email, 'qtd_pecas': f.qtd_pecas,
+        }
+        for f in Fornecedor.objects.annotate(qtd_pecas=Count('pecas'))
+    ]
     return render(request, 'oficina/fornecedor_list.html', {'fornecedores': fornecedores})
 
 

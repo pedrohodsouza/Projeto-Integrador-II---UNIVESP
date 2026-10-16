@@ -10,9 +10,9 @@
         <a class="btn" href="{% url 'cliente_create' %}">+ Novo cliente</a>
     </div>
 
-    <div id="lista-app" data-campos="nome,telefone,email" v-cloak>
+    <div id="lista-app" data-campos="codigo,nome,telefone,email" v-cloak>
         <input class="search-input" type="search" v-model="busca"
-               placeholder="Buscar por nome, telefone ou e-mail..." aria-label="Buscar clientes">
+               placeholder="Buscar por código, nome, telefone ou e-mail..." aria-label="Buscar clientes">
         <p class="search-count" v-if="busca">[[ filtrados.length ]] de [[ itens.length ]] cliente(s)</p>
 
         <div class="group-card">
@@ -20,7 +20,7 @@
                 <span class="row-icon row-icon--blue">👤</span>
                 <span class="row-text">
                     <span class="row-title">[[ cliente.nome ]]</span>
-                    <span class="row-subtitle">[[ cliente.telefone || 'Sem telefone' ]]</span>
+                    <span class="row-subtitle">[[ cliente.codigo ]] · [[ cliente.telefone || 'Sem telefone' ]]</span>
                 </span>
                 <span class="row-trailing">[[ cliente.email || '-' ]]</span>
             </div>
@@ -34,6 +34,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
 <script src="{% static 'oficina/js/lista-vue.js' %}"></script>
 {% endblock %}

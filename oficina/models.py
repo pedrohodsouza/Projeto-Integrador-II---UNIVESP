@@ -8,7 +8,19 @@ class EstoqueInsuficiente(Exception):
     pass
 
 
-class Cliente(models.Model):
+class CodigoAutomaticoMixin:
+    """Código de exibição gerado a partir da chave primária (ex.: CLI-00001)."""
+
+    PREFIXO_CODIGO = ''
+
+    @property
+    def codigo(self):
+        return f'{self.PREFIXO_CODIGO}-{self.pk:05d}' if self.pk else f'{self.PREFIXO_CODIGO}-novo'
+
+
+class Cliente(CodigoAutomaticoMixin, models.Model):
+    PREFIXO_CODIGO = 'CLI'
+
     nome = models.CharField(max_length=120)
     telefone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
@@ -17,10 +29,12 @@ class Cliente(models.Model):
         ordering = ['nome']
 
     def __str__(self):
-        return self.nome
+        return f'{self.nome} ({self.codigo})'
 
 
-class Veiculo(models.Model):
+class Veiculo(CodigoAutomaticoMixin, models.Model):
+    PREFIXO_CODIGO = 'VEI'
+
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='veiculos')
     placa = models.CharField(max_length=10)
     marca = models.CharField(max_length=60)
@@ -34,7 +48,9 @@ class Veiculo(models.Model):
         return f'{self.placa} - {self.marca} {self.modelo}'
 
 
-class Fornecedor(models.Model):
+class Fornecedor(CodigoAutomaticoMixin, models.Model):
+    PREFIXO_CODIGO = 'FOR'
+
     nome = models.CharField(max_length=120)
     cnpj = models.CharField('CNPJ', max_length=18, blank=True)
     contato = models.CharField('pessoa de contato', max_length=120, blank=True)
@@ -50,7 +66,9 @@ class Fornecedor(models.Model):
         return self.nome
 
 
-class Peca(models.Model):
+class Peca(CodigoAutomaticoMixin, models.Model):
+    PREFIXO_CODIGO = 'PEC'
+
     class Unidade(models.TextChoices):
         UNIDADE = 'UN', 'Unidade'
         PECA = 'PC', 'Peça'
@@ -60,7 +78,10 @@ class Peca(models.Model):
         METRO = 'M', 'Metro'
         CAIXA = 'CX', 'Caixa'
 
-    codigo = models.CharField('código', max_length=40, unique=True)
+    referencia = models.CharField(
+        'código do fabricante', max_length=40, blank=True,
+        help_text='Opcional. Código/part number da peça no catálogo do fabricante.',
+    )
     nome = models.CharField(max_length=120)
     categoria = models.CharField(max_length=60, blank=True, help_text='Ex.: Freios, Motor, Suspensão, Óleos e fluidos')
     fabricante = models.CharField(max_length=60, blank=True)
@@ -126,7 +147,9 @@ class Peca(models.Model):
         )
 
 
-class Atendimento(models.Model):
+class Atendimento(CodigoAutomaticoMixin, models.Model):
+    PREFIXO_CODIGO = 'OS'
+
     class Status(models.TextChoices):
         AGUARDANDO = 'aguardando', 'Aguardando atendimento'
         DIAGNOSTICO = 'diagnostico', 'Em diagnóstico'
@@ -173,7 +196,7 @@ class Atendimento(models.Model):
 
     @property
     def numero(self):
-        return f'OS-{self.pk:05d}' if self.pk else 'OS-novo'
+        return self.codigo
 
     @property
     def em_aberto(self):
