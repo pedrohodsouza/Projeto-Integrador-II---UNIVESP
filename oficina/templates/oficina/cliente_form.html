@@ -1,17 +1,41 @@
 {% extends "oficina/base.html" %}
 
-{% block title %}Novo cliente - Oficina Mecânica{% endblock %}
+{% block title %}{% if cliente %}Editar cliente{% else %}Novo cliente{% endif %} - Oficina Mecânica{% endblock %}
 
 {% block content %}
 <main class="page page-narrow">
-    <h1>Novo cliente</h1>
+    <h1>{% if cliente %}Editar cliente{% else %}Novo cliente{% endif %}</h1>
+    {% if cliente %}<p class="muted">Código: <strong>{{ cliente.codigo }}</strong></p>{% endif %}
     <form class="form-card" method="post" novalidate>
         {% csrf_token %}
+        {% include "oficina/_form_erros.html" %}
         {{ form.as_p }}
         <div class="form-actions">
             <a class="btn btn-secondary" href="{% url 'cliente_list' %}">Cancelar</a>
             <button type="submit" class="btn">Salvar</button>
         </div>
     </form>
+
+    {% if cliente %}
+    <section class="panel" style="margin-top: 1rem;">
+        <h2>Veículos deste cliente</h2>
+        {% for veiculo in veiculos %}
+        <p style="margin: 0 0 0.4rem;">
+            <a href="{% url 'veiculo_edit' veiculo.pk %}">{{ veiculo.placa }}</a>
+            <span class="muted">· {{ veiculo.marca }} {{ veiculo.modelo }}{% if veiculo.ano %} · {{ veiculo.ano }}{% endif %}</span>
+        </p>
+        {% empty %}
+        <p class="muted" style="margin: 0;">Nenhum veículo cadastrado.</p>
+        {% endfor %}
+        <a class="btn btn-secondary" style="margin-top: 0.5rem;" href="{% url 'veiculo_create' %}?cliente={{ cliente.pk }}">+ Adicionar veículo</a>
+    </section>
+
+    <form class="zona-exclusao" method="post" action="{% url 'cliente_delete' cliente.pk %}"
+          onsubmit="return confirm('Excluir o cliente {{ cliente.nome|escapejs }}? Esta ação não pode ser desfeita.');">
+        {% csrf_token %}
+        <span class="muted">Só é possível excluir clientes sem veículos vinculados.</span>
+        <button type="submit" class="btn-link-danger">Excluir cliente</button>
+    </form>
+    {% endif %}
 </main>
 {% endblock %}

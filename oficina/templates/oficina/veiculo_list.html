@@ -16,14 +16,15 @@
         <p class="search-count" v-if="busca">[[ filtrados.length ]] de [[ itens.length ]] veículo(s)</p>
 
         <div class="group-card">
-            <div class="group-row" v-for="veiculo in filtrados" :key="veiculo.id">
+            <a class="group-row is-link" v-for="veiculo in filtrados" :key="veiculo.id" :href="veiculo.id + '/editar/'">
                 <span class="row-icon row-icon--slate">🚗</span>
                 <span class="row-text">
                     <span class="row-title">[[ veiculo.placa ]]</span>
                     <span class="row-subtitle">[[ veiculo.codigo ]] · [[ veiculo.marca ]] [[ veiculo.modelo ]]<template v-if="veiculo.ano"> · [[ veiculo.ano ]]</template></span>
                 </span>
                 <span class="row-trailing">[[ veiculo.cliente__nome ]]</span>
-            </div>
+                <span class="chevron">›</span>
+            </a>
             <div class="group-row group-row--empty" v-if="filtrados.length === 0">
                 <span class="row-subtitle">[[ itens.length ? 'Nenhum veículo encontrado.' : 'Nenhum veículo cadastrado.' ]]</span>
             </div>

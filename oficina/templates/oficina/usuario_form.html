@@ -1,16 +1,17 @@
 {% extends "oficina/base.html" %}
 
-{% block title %}Novo usuário - Oficina Mecânica{% endblock %}
+{% block title %}{% if usuario %}Editar usuário{% else %}Novo usuário{% endif %} - Oficina Mecânica{% endblock %}
 
 {% block content %}
 <main class="page page-narrow">
-    <h1>Novo usuário</h1>
+    <h1>{% if usuario %}Editar usuário{% else %}Novo usuário{% endif %}</h1>
     <form class="form-card" method="post" novalidate>
         {% csrf_token %}
 
         {% if form.errors %}
         <div class="alert alert-error form-erros" role="alert">
-            <strong>O usuário não foi criado.</strong> Corrija o que está abaixo e salve de novo:
+            <strong>{% if usuario %}As alterações não foram salvas.{% else %}O usuário não foi criado.{% endif %}</strong>
+            Corrija o que está abaixo e salve de novo:
             <ul>
                 {% for erro in form.non_field_errors %}<li>{{ erro }}</li>{% endfor %}
                 {% for campo in form %}{% for erro in campo.errors %}
@@ -21,11 +22,15 @@
         {% endif %}
 
         {% for campo in form %}
-        <p class="{% if campo.errors %}campo-com-erro{% endif %}">
-            {{ campo.label_tag }}
-            {{ campo }}
-            {% if campo.name == 'password1' %}
-            <span class="helptext">Mínimo de 8 caracteres, não pode ser só números, nem uma senha comum (ex.: 12345678, senha123).</span>
+        <p class="{% if campo.errors %}campo-com-erro{% endif %}{% if campo.widget_type == 'checkbox' %} check-field{% endif %}">
+            {% if campo.widget_type == 'checkbox' %}
+                {{ campo }} {{ campo.label_tag }}
+            {% else %}
+                {{ campo.label_tag }}
+                {{ campo }}
+            {% endif %}
+            {% if campo.name == 'password1' or campo.name == 'nova_senha1' %}
+            <span class="helptext">{% if campo.name == 'nova_senha1' %}Deixe em branco para manter a senha atual. {% endif %}Mínimo de 8 caracteres, não pode ser só números, nem uma senha comum (ex.: 12345678, senha123).</span>
             {% elif campo.name == 'username' %}
             <span class="helptext">Usado para entrar no sistema. Sem espaços ou acentos; pode usar letras, números e @ . + - _</span>
             {% endif %}
@@ -37,5 +42,11 @@
             <button type="submit" class="btn">Salvar</button>
         </div>
     </form>
+    {% if usuario %}
+    <p class="muted" style="margin-top: 1rem;">
+        Usuários não são excluídos, para manter o histórico de quem registrou cada atendimento e movimentação.
+        Para tirar o acesso de alguém, desmarque "Ativo".
+    </p>
+    {% endif %}
 </main>
 {% endblock %}

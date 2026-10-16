@@ -216,3 +216,87 @@ class UsuarioTests(TestCase):
         self.assertEqual(resposta.status_code, 200)
         self.assertContains(resposta, 'O usuário não foi criado.')
         self.assertFalse(User.objects.filter(username='mecanico1').exists())
+
+
+class EdicaoCadastrosTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser('chefe', password='senha-do-chefe')
+        self.client.force_login(self.admin)
+        self.cliente = Cliente.objects.create(nome='Maria', telefone='111')
+        self.veiculo = Veiculo.objects.create(cliente=self.cliente, placa='AAA1A11', marca='Fiat', modelo='Uno')
+
+    def test_editar_cliente(self):
+        url = reverse('cliente_edit', args=[self.cliente.pk])
+        self.assertContains(self.client.get(url), self.cliente.codigo)
+        resposta = self.client.post(url, {'nome': 'Maria Souza', 'telefone': '222', 'email': 'm@x.com'})
+        self.assertRedirects(resposta, reverse('cliente_list'))
+        self.cliente.refresh_from_db()
+        self.assertEqual((self.cliente.nome, self.cliente.telefone), ('Maria Souza', '222'))
+        self.assertEqual(Cliente.objects.count(), 1)
+
+    def test_editar_veiculo_trocando_dono(self):
+        outro = Cliente.objects.create(nome='João')
+        url = reverse('veiculo_edit', args=[self.veiculo.pk])
+        self.assertEqual(self.client.get(url).status_code, 200)
+        self.client.post(url, {'cliente': outro.pk, 'placa': 'BBB2B22', 'marca': 'Fiat', 'modelo': 'Uno', 'ano': '2010'})
+        self.veiculo.refresh_from_db()
+        self.assertEqual((self.veiculo.placa, self.veiculo.cliente, self.veiculo.ano), ('BBB2B22', outro, 2010))
+        self.assertEqual(Veiculo.objects.count(), 1)
+
+    def test_listas_levam_para_edicao(self):
+        self.assertContains(self.client.get(reverse('cliente_list')), "/editar/")
+        self.assertContains(self.client.get(reverse('veiculo_list')), "/editar/")
+        self.assertContains(self.client.get(reverse('usuario_list')), reverse('usuario_edit', args=[self.admin.pk]))
+
+    def test_exclusoes_protegem_historico(self):
+        Atendimento.objects.create(veiculo=self.veiculo, queixa='Revisão')
+        self.client.post(reverse('cliente_delete', args=[self.cliente.pk]))
+        self.client.post(reverse('veiculo_delete', args=[self.veiculo.pk]))
+        self.assertTrue(Cliente.objects.filter(pk=self.cliente.pk).exists())
+        self.assertTrue(Veiculo.objects.filter(pk=self.veiculo.pk).exists())
+
+    def test_exclusoes_permitidas(self):
+        self.client.post(reverse('veiculo_delete', args=[self.veiculo.pk]))
+        self.client.post(reverse('cliente_delete', args=[self.cliente.pk]))
+        self.assertFalse(Cliente.objects.exists())
+        fornecedor = Fornecedor.objects.create(nome='Distribuidora')
+        peca = Peca.objects.create(nome='Filtro', fornecedor=fornecedor)
+        self.client.post(reverse('fornecedor_delete', args=[fornecedor.pk]))
+        peca.refresh_from_db()
+        self.assertIsNone(peca.fornecedor)
+        self.client.post(reverse('peca_delete', args=[peca.pk]))
+        self.assertFalse(Peca.objects.exists())
+
+    def test_peca_com_movimentacao_nao_e_excluida(self):
+        peca = Peca.objects.create(nome='Óleo')
+        peca.movimentar(MovimentacaoEstoque.Tipo.ENTRADA, 5, self.admin)
+        self.client.post(reverse('peca_delete', args=[peca.pk]))
+        self.assertTrue(Peca.objects.filter(pk=peca.pk).exists())
+
+    def test_editar_usuario_e_redefinir_senha(self):
+        mecanico = User.objects.create_user('mecanico', password='Antiga@2026')
+        url = reverse('usuario_edit', args=[mecanico.pk])
+        self.assertEqual(self.client.get(url).status_code, 200)
+        resposta = self.client.post(url, {
+            'username': 'mecanico', 'first_name': 'Carlos', 'last_name': 'Lima', 'email': 'c@x.com',
+            'is_active': 'on', 'nova_senha1': 'Nova@Senha2026', 'nova_senha2': 'Nova@Senha2026',
+        })
+        self.assertRedirects(resposta, reverse('usuario_list'))
+        mecanico.refresh_from_db()
+        self.assertEqual(mecanico.get_full_name(), 'Carlos Lima')
+        self.assertTrue(mecanico.check_password('Nova@Senha2026'))
+
+    def test_editar_usuario_sem_trocar_senha(self):
+        mecanico = User.objects.create_user('mecanico', password='Antiga@2026')
+        self.client.post(reverse('usuario_edit', args=[mecanico.pk]), {
+            'username': 'mecanico', 'first_name': 'Carlos', 'is_active': 'on',
+        })
+        mecanico.refresh_from_db()
+        self.assertEqual(mecanico.first_name, 'Carlos')
+        self.assertTrue(mecanico.check_password('Antiga@2026'))
+
+    def test_admin_nao_se_desativa(self):
+        resposta = self.client.post(reverse('usuario_edit', args=[self.admin.pk]), {'username': 'chefe'})
+        self.assertContains(resposta, 'As alterações não foram salvas.')
+        self.admin.refresh_from_db()
+        self.assertTrue(self.admin.is_active and self.admin.is_staff)

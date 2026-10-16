@@ -16,14 +16,15 @@
         <p class="search-count" v-if="busca">[[ filtrados.length ]] de [[ itens.length ]] cliente(s)</p>
 
         <div class="group-card">
-            <div class="group-row" v-for="cliente in filtrados" :key="cliente.id">
+            <a class="group-row is-link" v-for="cliente in filtrados" :key="cliente.id" :href="cliente.id + '/editar/'">
                 <span class="row-icon row-icon--blue">👤</span>
                 <span class="row-text">
                     <span class="row-title">[[ cliente.nome ]]</span>
                     <span class="row-subtitle">[[ cliente.codigo ]] · [[ cliente.telefone || 'Sem telefone' ]]</span>
                 </span>
                 <span class="row-trailing">[[ cliente.email || '-' ]]</span>
-            </div>
+                <span class="chevron">›</span>
+            </a>
             <div class="group-row group-row--empty" v-if="filtrados.length === 0">
                 <span class="row-subtitle">[[ itens.length ? 'Nenhum cliente encontrado.' : 'Nenhum cliente cadastrado.' ]]</span>
             </div>
