@@ -24,28 +24,21 @@ Este projeto consiste em um **Sistema Web de Gestão para Oficinas Mecânicas**,
   - Código em `oficina/static/oficina/js/` (`atendimentos-vue.js`, `estoque-vue.js`, `lista-vue.js` e `combobox-vue.js`).
 - **Banco de Dados:** PostgreSQL em nuvem (Supabase), compartilhado por todo o grupo e já configurado no projeto. Os testes automatizados usam SQLite local, para não alterar os dados reais.
 
-## Como Executar Localmente
+## Como Executar
+
+Pré-requisito: [Python 3.12 ou mais recente](https://www.python.org/downloads/) (no Windows, marque "Add Python to PATH" na instalação).
+
+Depois de baixar o repositório, dentro da pasta dele rode **um único comando**:
 
 ```bash
-# criar e ativar o ambiente virtual
-python -m venv venv
-./venv/Scripts/activate      # Windows
-source venv/bin/activate     # Linux/Mac
-
-# instalar dependências
-pip install -r requirements.txt
-
-# rodar o servidor
-python manage.py runserver
+python iniciar.py
 ```
 
-O banco em nuvem já tem as tabelas e os dados do grupo, então não é preciso rodar migrations nem criar usuário. Entre com o usuário de vocês.
+Ele cria o ambiente virtual e instala as dependências (só na primeira vez ou quando o `requirements.txt` mudar), conecta ao banco compartilhado na nuvem, aplica atualizações pendentes, sobe o servidor e abre o navegador em `http://127.0.0.1:8000/login/`. É só entrar com o seu usuário e senha. Para encerrar, `Ctrl+C`.
 
-Quando alguém criar um novo modelo ou alterar um existente, rode `python manage.py migrate` uma vez para atualizar o banco compartilhado.
+O banco em nuvem (Supabase) já tem as tabelas e os dados do grupo, então não é preciso criar banco nem usuário.
 
-> Para usar outro banco (por exemplo, um SQLite local para experimentos), copie `.env.example` para `.env` e defina `DATABASE_URL`. Num banco novo, rode `python manage.py migrate` e `python manage.py createsuperuser`.
-
-Acesse `http://127.0.0.1:8000/login/` para entrar no sistema.
+> Para usar outro banco (por exemplo, um SQLite local para experimentos), copie `.env.example` para `.env` e defina `DATABASE_URL`. Num banco novo, rode `python manage.py createsuperuser` para criar o primeiro usuário.
 
 Para rodar os testes automatizados:
 
