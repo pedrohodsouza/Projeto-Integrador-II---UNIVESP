@@ -1124,3 +1124,28 @@ select.combobox-original {
     border-color: var(--cor-destaque);
     background: #fff5f5;
 }
+
+/* Exclusão de cadastros */
+
+.zona-exclusao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px dashed #FCA5A5;
+    border-radius: 12px;
+}
+
+.btn-secondary.btn-perigo {
+    color: var(--cor-destaque);
+    border-color: #FCA5A5;
+}
+
+.btn-secondary.btn-perigo:hover {
+    background: #FEE2E2;
+    color: var(--cor-destaque-escura);
+}
+
+.header-actions form { margin: 0; }

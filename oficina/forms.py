@@ -1,3 +1,4 @@
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
@@ -16,6 +17,59 @@ class UsuarioForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'email']
+
+
+class UsuarioEdicaoForm(forms.ModelForm):
+    """Edição de usuário pelo administrador, com redefinição de senha opcional."""
+
+    nova_senha1 = forms.CharField(
+        label='Nova senha', required=False, strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        help_text='Deixe em branco para manter a senha atual.',
+    )
+    nova_senha2 = forms.CharField(
+        label='Confirmação da nova senha', required=False, strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active']
+        labels = {
+            'is_staff': 'Administrador (pode gerenciar usuários)',
+            'is_active': 'Ativo (pode entrar no sistema)',
+        }
+        help_texts = {'username': '', 'is_staff': '', 'is_active': ''}
+
+    def __init__(self, *args, editor=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.editor = editor
+
+    def clean(self):
+        dados = super().clean()
+        if self.editor and self.instance.pk == self.editor.pk:
+            if not dados.get('is_active'):
+                self.add_error('is_active', 'Você não pode desativar o seu próprio usuário.')
+            if not dados.get('is_staff'):
+                self.add_error('is_staff', 'Você não pode remover o seu próprio acesso de administrador.')
+        senha1, senha2 = dados.get('nova_senha1'), dados.get('nova_senha2')
+        if senha1 or senha2:
+            if senha1 != senha2:
+                self.add_error('nova_senha2', 'As duas senhas não são iguais.')
+            else:
+                try:
+                    password_validation.validate_password(senha1, self.instance)
+                except forms.ValidationError as erro:
+                    self.add_error('nova_senha1', erro)
+        return dados
+
+    def save(self, commit=True):
+        usuario = super().save(commit=False)
+        if self.cleaned_data.get('nova_senha1'):
+            usuario.set_password(self.cleaned_data['nova_senha1'])
+        if commit:
+            usuario.save()
+        return usuario
 
 
 class ClienteForm(forms.ModelForm):

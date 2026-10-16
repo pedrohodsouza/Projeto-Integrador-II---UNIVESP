@@ -13,5 +13,13 @@
             <button type="submit" class="btn">Salvar</button>
         </div>
     </form>
+    {% if fornecedor %}
+    <form class="zona-exclusao" method="post" action="{% url 'fornecedor_delete' fornecedor.pk %}"
+          onsubmit="return confirm('Excluir o fornecedor {{ fornecedor.nome|escapejs }}? As peças dele ficarão sem fornecedor principal.');">
+        {% csrf_token %}
+        <span class="muted">Código {{ fornecedor.codigo }}</span>
+        <button type="submit" class="btn-link-danger">Excluir fornecedor</button>
+    </form>
+    {% endif %}
 </main>
 {% endblock %}

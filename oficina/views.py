@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 
 from .forms import (
     AtendimentoForm, ClienteForm, FornecedorForm, ItemAtendimentoForm, MovimentacaoForm, PecaForm,
-    StatusAtendimentoForm, UsuarioForm, VeiculoForm,
+    StatusAtendimentoForm, UsuarioEdicaoForm, UsuarioForm, VeiculoForm,
 )
 from .models import (
     Atendimento, Cliente, EstoqueInsuficiente, Fornecedor, ItemAtendimento, MovimentacaoEstoque, Peca,
@@ -72,16 +72,32 @@ def cliente_list(request):
 
 
 @login_required
-def cliente_create(request):
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Cliente cadastrado com sucesso.')
-            return redirect('cliente_list')
-    else:
-        form = ClienteForm()
-    return render(request, 'oficina/cliente_form.html', {'form': form})
+def cliente_form(request, pk=None):
+    cliente = get_object_or_404(Cliente, pk=pk) if pk else None
+    form = ClienteForm(request.POST or None, instance=cliente)
+    if request.method == 'POST' and form.is_valid():
+        salvo = form.save()
+        acao = 'atualizado' if cliente else 'cadastrado'
+        messages.success(request, f'Cliente "{salvo.nome}" {acao} com sucesso.')
+        return redirect('cliente_list')
+    veiculos = cliente.veiculos.all() if cliente else []
+    return render(request, 'oficina/cliente_form.html', {'form': form, 'cliente': cliente, 'veiculos': veiculos})
+
+
+@login_required
+@require_POST
+def cliente_delete(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk)
+    if cliente.veiculos.exists():
+        messages.error(
+            request,
+            f'Não é possível excluir "{cliente.nome}": há veículos vinculados a ele. '
+            'Exclua ou transfira os veículos primeiro.',
+        )
+        return redirect('cliente_edit', pk=pk)
+    cliente.delete()
+    messages.success(request, f'Cliente "{cliente.nome}" excluído.')
+    return redirect('cliente_list')
 
 
 @login_required
@@ -97,16 +113,34 @@ def veiculo_list(request):
 
 
 @login_required
-def veiculo_create(request):
-    if request.method == 'POST':
-        form = VeiculoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Veículo cadastrado com sucesso.')
-            return redirect('veiculo_list')
-    else:
-        form = VeiculoForm()
-    return render(request, 'oficina/veiculo_form.html', {'form': form})
+def veiculo_form(request, pk=None):
+    veiculo = get_object_or_404(Veiculo, pk=pk) if pk else None
+    form = VeiculoForm(request.POST or None, instance=veiculo, initial={'cliente': request.GET.get('cliente')})
+    if request.method == 'POST' and form.is_valid():
+        salvo = form.save()
+        acao = 'atualizado' if veiculo else 'cadastrado'
+        messages.success(request, f'Veículo {salvo.placa} {acao} com sucesso.')
+        return redirect('veiculo_list')
+    atendimentos = veiculo.atendimentos.all()[:10] if veiculo else []
+    return render(request, 'oficina/veiculo_form.html', {
+        'form': form, 'veiculo': veiculo, 'atendimentos': atendimentos,
+    })
+
+
+@login_required
+@require_POST
+def veiculo_delete(request, pk):
+    veiculo = get_object_or_404(Veiculo, pk=pk)
+    if veiculo.atendimentos.exists():
+        messages.error(
+            request,
+            f'Não é possível excluir o veículo {veiculo.placa}: ele tem atendimentos registrados, '
+            'que fazem parte do histórico da oficina.',
+        )
+        return redirect('veiculo_edit', pk=pk)
+    veiculo.delete()
+    messages.success(request, f'Veículo {veiculo.placa} excluído.')
+    return redirect('veiculo_list')
 
 
 @login_required
@@ -128,6 +162,20 @@ def usuario_create(request):
     else:
         form = UsuarioForm()
     return render(request, 'oficina/usuario_form.html', {'form': form})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def usuario_edit(request, pk):
+    usuario = get_object_or_404(User, pk=pk)
+    form = UsuarioEdicaoForm(request.POST or None, instance=usuario, editor=request.user)
+    if request.method == 'POST' and form.is_valid():
+        salvo = form.save()
+        if salvo == request.user and form.cleaned_data.get('nova_senha1'):
+            update_session_auth_hash(request, salvo)
+        messages.success(request, f'Usuário "{salvo.username}" atualizado com sucesso.')
+        return redirect('usuario_list')
+    return render(request, 'oficina/usuario_form.html', {'form': form, 'usuario': usuario})
 
 
 def _nome_usuario(user):
@@ -398,3 +446,30 @@ def fornecedor_form(request, pk=None):
         messages.success(request, 'Fornecedor salvo com sucesso.')
         return redirect('fornecedor_list')
     return render(request, 'oficina/fornecedor_form.html', {'form': form, 'fornecedor': fornecedor})
+
+
+@login_required
+@require_POST
+def fornecedor_delete(request, pk):
+    fornecedor = get_object_or_404(Fornecedor, pk=pk)
+    qtd_pecas = fornecedor.pecas.count()
+    fornecedor.delete()
+    aviso = f' {qtd_pecas} peça(s) ficaram sem fornecedor principal.' if qtd_pecas else ''
+    messages.success(request, f'Fornecedor "{fornecedor.nome}" excluído.{aviso}')
+    return redirect('fornecedor_list')
+
+
+@login_required
+@require_POST
+def peca_delete(request, pk):
+    peca = get_object_or_404(Peca, pk=pk)
+    if peca.movimentacoes.exists() or peca.itens_atendimento.exists():
+        messages.error(
+            request,
+            f'Não é possível excluir "{peca.nome}": ela já tem movimentações de estoque ou foi usada em '
+            'atendimentos. Para tirá-la de uso, edite a peça e desmarque "Ativo".',
+        )
+        return redirect('peca_detail', pk=pk)
+    peca.delete()
+    messages.success(request, f'Peça "{peca.nome}" excluída.')
+    return redirect('peca_list')

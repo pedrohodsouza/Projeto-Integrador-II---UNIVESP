@@ -14,7 +14,14 @@
             {% else %}<span class="badge badge-estoque-ok">Estoque OK</span>{% endif %}
             {% if not peca.ativo %}<span class="badge">Inativa</span>{% endif %}
         </div>
-        <a class="btn btn-secondary" href="{% url 'peca_edit' peca.pk %}">Editar</a>
+        <div class="header-actions">
+            <a class="btn btn-secondary" href="{% url 'peca_edit' peca.pk %}">Editar</a>
+            <form method="post" action="{% url 'peca_delete' peca.pk %}"
+                  onsubmit="return confirm('Excluir a peça {{ peca.nome|escapejs }}?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary btn-perigo">Excluir</button>
+            </form>
+        </div>
     </div>
 
     <div class="detail-grid">
