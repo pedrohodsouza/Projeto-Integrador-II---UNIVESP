@@ -22,7 +22,7 @@ Este projeto consiste em um **Sistema Web de Gestão para Oficinas Mecânicas**,
     - **Listagens de Clientes, Veículos e Fornecedores:** busca em tempo real (ignora acentos e maiúsculas).
   - Os dados são enviados pelo Django com o filtro `json_script` e renderizados pelo Vue no navegador. Para não conflitar com a sintaxe `{{ }}` do Django, o Vue usa os delimitadores `[[ ]]`.
   - Código em `oficina/static/oficina/js/` (`atendimentos-vue.js`, `estoque-vue.js`, `lista-vue.js` e `combobox-vue.js`).
-- **Banco de Dados:** SQLite (ambiente de desenvolvimento).
+- **Banco de Dados:** PostgreSQL em nuvem (Supabase), compartilhado por todo o grupo e já configurado no projeto. Os testes automatizados usam SQLite local, para não alterar os dados reais.
 
 ## Como Executar Localmente
 
@@ -35,15 +35,15 @@ source venv/bin/activate     # Linux/Mac
 # instalar dependências
 pip install -r requirements.txt
 
-# aplicar as migrations
-python manage.py migrate
-
-# criar um usuário administrador
-python manage.py createsuperuser
-
 # rodar o servidor
 python manage.py runserver
 ```
+
+O banco em nuvem já tem as tabelas e os dados do grupo, então não é preciso rodar migrations nem criar usuário. Entre com o usuário de vocês.
+
+Quando alguém criar um novo modelo ou alterar um existente, rode `python manage.py migrate` uma vez para atualizar o banco compartilhado.
+
+> Para usar outro banco (por exemplo, um SQLite local para experimentos), copie `.env.example` para `.env` e defina `DATABASE_URL`. Num banco novo, rode `python manage.py migrate` e `python manage.py createsuperuser`.
 
 Acesse `http://127.0.0.1:8000/login/` para entrar no sistema.
 

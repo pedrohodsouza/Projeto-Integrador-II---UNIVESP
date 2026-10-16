@@ -82,18 +82,21 @@ WSGI_APPLICATION = 'oficina_mecanica.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 # Banco de dados
-# Com DATABASE_URL definida (arquivo .env ou variável de ambiente), usa o PostgreSQL
-# compartilhado do grupo, hospedado no Supabase. Sem ela, usa o SQLite local.
-# Os testes automatizados sempre usam SQLite local, para nunca alterar os dados reais.
+# Por padrão usa o PostgreSQL compartilhado do grupo (Supabase): basta baixar e rodar.
+# Para usar outro banco, defina DATABASE_URL no .env. Os testes usam SQLite local.
+BANCO_NUVEM_URL = (
+    'postgresql://postgres.qsmwbymwniieuwycktau:vS2P73HlU4lF1VBG'
+    '@aws-0-us-east-1.pooler.supabase.com:5432/postgres'
+)
 RODANDO_TESTES = len(sys.argv) > 1 and sys.argv[1] == 'test'
-SQLITE_URL = f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
 
 if RODANDO_TESTES:
-    DATABASES = {'default': dj_database_url.parse(SQLITE_URL)}
+    DATABASES = {'default': dj_database_url.parse(f"sqlite:///{BASE_DIR / 'db.sqlite3'}")}
 else:
     DATABASES = {
-        'default': dj_database_url.config(default=SQLITE_URL, conn_max_age=60, conn_health_checks=True)
+        'default': dj_database_url.config(default=BANCO_NUVEM_URL, conn_max_age=60, conn_health_checks=True)
     }
+
 
 
 # Password validation
