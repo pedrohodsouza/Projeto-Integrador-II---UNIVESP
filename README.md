@@ -12,7 +12,10 @@ Este projeto consiste em um **Sistema Web de Gestão para Oficinas Mecânicas**,
 ## Tecnologias
 
 - **Backend:** Django (Python), com banco de dados via migrations.
-- **Frontend:** Templates Django + JavaScript.
+- **Frontend:** Templates Django + **Vue.js 3** (framework JavaScript).
+  - O Vue é carregado via CDN (sem etapa de build) e usado nas telas de listagem de **Clientes** e **Veículos**, que contam com busca reativa em tempo real (filtra por nome, telefone, e-mail, placa, marca, modelo ou cliente, ignorando acentos e maiúsculas).
+  - Os dados são enviados pelo Django com o filtro `json_script` e renderizados pelo Vue no navegador. Para não conflitar com a sintaxe `{{ }}` do Django, o Vue usa os delimitadores `[[ ]]`.
+  - Código em `oficina/static/oficina/js/lista-vue.js`.
 - **Banco de Dados:** SQLite (ambiente de desenvolvimento).
 
 ## Como Executar Localmente
@@ -44,6 +47,7 @@ Acesse `http://127.0.0.1:8000/login/` para entrar no sistema.
 - **Cadastro de Usuários:** Gestão de contas de acesso ao sistema (restrito a administradores).
 - **Cadastro de Clientes:** Registro dos dados dos clientes da oficina.
 - **Cadastro de Veículos:** Registro dos veículos, vinculados aos respectivos clientes.
+- **Busca em tempo real (Vue.js):** Pesquisa instantânea nas listagens de clientes e veículos, sem recarregar a página.
 
 ## Autores
 

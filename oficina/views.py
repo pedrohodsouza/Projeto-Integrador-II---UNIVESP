@@ -41,7 +41,7 @@ def configuracoes_view(request):
 
 @login_required
 def cliente_list(request):
-    clientes = Cliente.objects.all()
+    clientes = list(Cliente.objects.values('id', 'nome', 'telefone', 'email'))
     return render(request, 'oficina/cliente_list.html', {'clientes': clientes})
 
 
@@ -60,7 +60,11 @@ def cliente_create(request):
 
 @login_required
 def veiculo_list(request):
-    veiculos = Veiculo.objects.select_related('cliente').all()
+    veiculos = list(
+        Veiculo.objects.select_related('cliente').values(
+            'id', 'placa', 'marca', 'modelo', 'ano', 'cliente__nome'
+        )
+    )
     return render(request, 'oficina/veiculo_list.html', {'veiculos': veiculos})
 
 

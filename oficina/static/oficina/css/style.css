@@ -497,3 +497,31 @@ a.group-row.is-link:active {
         text-align: center;
     }
 }
+
+/* Busca reativa (Vue.js) */
+.search-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--cor-fundo-secundario);
+    background: #fff;
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-size: 1rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--cor-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.search-count {
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+    margin: -0.5rem 0 0.75rem;
+}
+
+[v-cloak] {
+    display: none;
+}
