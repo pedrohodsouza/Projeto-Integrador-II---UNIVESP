@@ -1,4 +1,5 @@
 {% extends "oficina/base.html" %}
+{% load static %}
 
 {% block title %}Veículos - Oficina Mecânica{% endblock %}
 
@@ -9,21 +10,29 @@
         <a class="btn" href="{% url 'veiculo_create' %}">+ Novo veículo</a>
     </div>
 
-    <div class="group-card">
-        {% for veiculo in veiculos %}
-        <div class="group-row">
-            <span class="row-icon row-icon--slate">🚗</span>
-            <span class="row-text">
-                <span class="row-title">{{ veiculo.placa }}</span>
-                <span class="row-subtitle">{{ veiculo.marca }} {{ veiculo.modelo }}{% if veiculo.ano %} · {{ veiculo.ano }}{% endif %}</span>
-            </span>
-            <span class="row-trailing">{{ veiculo.cliente.nome }}</span>
+    <div id="lista-app" data-campos="codigo,placa,marca,modelo,ano,cliente__nome" v-cloak>
+        <input class="search-input" type="search" v-model="busca"
+               placeholder="Buscar por código, placa, marca, modelo ou cliente..." aria-label="Buscar veículos">
+        <p class="search-count" v-if="busca">[[ filtrados.length ]] de [[ itens.length ]] veículo(s)</p>
+
+        <div class="group-card">
+            <div class="group-row" v-for="veiculo in filtrados" :key="veiculo.id">
+                <span class="row-icon row-icon--slate">🚗</span>
+                <span class="row-text">
+                    <span class="row-title">[[ veiculo.placa ]]</span>
+                    <span class="row-subtitle">[[ veiculo.codigo ]] · [[ veiculo.marca ]] [[ veiculo.modelo ]]<template v-if="veiculo.ano"> · [[ veiculo.ano ]]</template></span>
+                </span>
+                <span class="row-trailing">[[ veiculo.cliente__nome ]]</span>
+            </div>
+            <div class="group-row group-row--empty" v-if="filtrados.length === 0">
+                <span class="row-subtitle">[[ itens.length ? 'Nenhum veículo encontrado.' : 'Nenhum veículo cadastrado.' ]]</span>
+            </div>
         </div>
-        {% empty %}
-        <div class="group-row group-row--empty">
-            <span class="row-subtitle">Nenhum veículo cadastrado.</span>
-        </div>
-        {% endfor %}
     </div>
 </div>
+{{ veiculos|json_script:"lista-dados" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'oficina/js/lista-vue.js' %}"></script>
 {% endblock %}

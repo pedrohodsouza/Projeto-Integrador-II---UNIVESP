@@ -9,6 +9,40 @@
         <p id="clock" class="clock"></p>
     </div>
 
+    <div class="group-card" style="margin-bottom: 1rem;">
+        <a href="{% url 'atendimento_list' %}" class="group-row is-link">
+            <span class="row-icon row-icon--red">🛠️</span>
+            <span class="row-text">
+                <span class="row-title">Atendimentos</span>
+                <span class="row-subtitle">
+                    {{ atendimento_aberto_count }} em aberto · {{ atendimento_pronto_count }} pronto{{ atendimento_pronto_count|pluralize }} para retirada{% if atendimento_atrasado_count %} · {{ atendimento_atrasado_count }} atrasado{{ atendimento_atrasado_count|pluralize }}{% endif %}
+                </span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+    </div>
+
+    <div class="group-card" style="margin-bottom: 1rem;">
+        <a href="{% url 'peca_list' %}" class="group-row is-link">
+            <span class="row-icon row-icon--dark">📦</span>
+            <span class="row-text">
+                <span class="row-title">Estoque de peças</span>
+                <span class="row-subtitle">
+                    {{ peca_count }} peça{{ peca_count|pluralize }} cadastrada{{ peca_count|pluralize }}{% if peca_baixa_count %} · {{ peca_baixa_count }} para repor{% endif %}
+                </span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+        <a href="{% url 'fornecedor_list' %}" class="group-row is-link">
+            <span class="row-icon row-icon--slate">🏭</span>
+            <span class="row-text">
+                <span class="row-title">Fornecedores</span>
+                <span class="row-subtitle">{{ fornecedor_count }} cadastrado{{ fornecedor_count|pluralize }}</span>
+            </span>
+            <span class="chevron">›</span>
+        </a>
+    </div>
+
     <div class="group-card">
         <a href="{% url 'cliente_list' %}" class="group-row is-link">
             <span class="row-icon row-icon--blue">👤</span>

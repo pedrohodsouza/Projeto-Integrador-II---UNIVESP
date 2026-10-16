@@ -1,0 +1,39 @@
+{% extends "oficina/base.html" %}
+{% load static %}
+
+{% block title %}Fornecedores - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<div class="page">
+    <div class="page-header">
+        <h1>Fornecedores</h1>
+        <a class="btn" href="{% url 'fornecedor_create' %}">+ Novo fornecedor</a>
+    </div>
+
+    <div id="lista-app" data-campos="codigo,nome,cnpj,contato,telefone,email" v-cloak>
+        <input class="search-input" type="search" v-model="busca"
+               placeholder="Buscar por código, nome, CNPJ, contato, telefone ou e-mail..." aria-label="Buscar fornecedores">
+        <p class="search-count" v-if="busca">[[ filtrados.length ]] de [[ itens.length ]] fornecedor(es)</p>
+
+        <div class="group-card">
+            <a class="group-row is-link" v-for="f in filtrados" :key="f.id" :href="f.id + '/editar/'">
+                <span class="row-icon row-icon--dark">🏭</span>
+                <span class="row-text">
+                    <span class="row-title">[[ f.nome ]]</span>
+                    <span class="row-subtitle">[[ [f.codigo, f.contato, f.telefone, f.email].filter(Boolean).join(' · ') || 'Sem contato' ]]</span>
+                </span>
+                <span class="row-trailing">[[ f.qtd_pecas ]] peça(s)</span>
+                <span class="chevron">›</span>
+            </a>
+            <div class="group-row group-row--empty" v-if="filtrados.length === 0">
+                <span class="row-subtitle">[[ itens.length ? 'Nenhum fornecedor encontrado.' : 'Nenhum fornecedor cadastrado.' ]]</span>
+            </div>
+        </div>
+    </div>
+</div>
+{{ fornecedores|json_script:"lista-dados" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'oficina/js/lista-vue.js' %}"></script>
+{% endblock %}

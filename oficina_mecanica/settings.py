@@ -10,10 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
+import sys
 from pathlib import Path
+
+import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -74,12 +81,19 @@ WSGI_APPLICATION = 'oficina_mecanica.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Banco de dados
+# Com DATABASE_URL definida (arquivo .env ou variável de ambiente), usa o PostgreSQL
+# compartilhado do grupo, hospedado no Supabase. Sem ela, usa o SQLite local.
+# Os testes automatizados sempre usam SQLite local, para nunca alterar os dados reais.
+RODANDO_TESTES = len(sys.argv) > 1 and sys.argv[1] == 'test'
+SQLITE_URL = f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+
+if RODANDO_TESTES:
+    DATABASES = {'default': dj_database_url.parse(SQLITE_URL)}
+else:
+    DATABASES = {
+        'default': dj_database_url.config(default=SQLITE_URL, conn_max_age=60, conn_health_checks=True)
     }
-}
 
 
 # Password validation
