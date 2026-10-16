@@ -1,0 +1,113 @@
+{% extends "oficina/base.html" %}
+{% load static %}
+
+{% block title %}Estoque de peças - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<div class="page page-wide">
+    <div class="page-header">
+        <h1>Estoque de peças</h1>
+        <div class="header-actions">
+            <a class="btn btn-secondary" href="{% url 'movimentacao_list' %}">Movimentações</a>
+            <a class="btn btn-secondary" href="{% url 'fornecedor_list' %}">Fornecedores</a>
+            <a class="btn" href="{% url 'peca_create' %}">+ Nova peça</a>
+        </div>
+    </div>
+
+    <div id="estoque-app" data-base-url="{% url 'peca_list' %}" v-cloak>
+        <div class="stats">
+            <button type="button" class="stat" :class="{ 'is-active': !temFiltro }" @click="limpar">
+                <span class="stat-valor">[[ indicadores.itens ]]</span>
+                <span class="stat-rotulo">Peças cadastradas</span>
+            </button>
+            <div class="stat" style="cursor: default;">
+                <span class="stat-valor">[[ moeda(indicadores.valor) ]]</span>
+                <span class="stat-rotulo">Valor em estoque (custo)</span>
+            </div>
+            <button type="button" class="stat stat--aviso" :class="{ 'is-active': filtroSituacao === 'baixo' }" @click="filtrarSituacao('baixo')">
+                <span class="stat-valor">[[ indicadores.baixo ]]</span>
+                <span class="stat-rotulo">Abaixo do mínimo</span>
+            </button>
+            <button type="button" class="stat stat--alerta" :class="{ 'is-active': filtroSituacao === 'zerado' }" @click="filtrarSituacao('zerado')">
+                <span class="stat-valor">[[ indicadores.zerado ]]</span>
+                <span class="stat-rotulo">Sem estoque</span>
+            </button>
+        </div>
+
+        <div class="toolbar">
+            <input class="search-input" type="search" v-model="busca"
+                   placeholder="Buscar por código, nome, fabricante, fornecedor ou localização..." aria-label="Buscar peças">
+            <select v-model="filtroCategoria" aria-label="Filtrar por categoria">
+                <option value="">Todas as categorias</option>
+                <option v-for="c in categorias" :key="c" :value="c">[[ c ]]</option>
+            </select>
+            <select v-model="filtroSituacao" aria-label="Filtrar por situação">
+                <option value="">Qualquer situação</option>
+                <option value="repor">Precisa repor</option>
+                <option value="baixo">Abaixo do mínimo</option>
+                <option value="zerado">Sem estoque</option>
+                <option value="ok">OK</option>
+            </select>
+            <select v-model="ordem" aria-label="Ordenar">
+                <option value="nome">Ordenar por nome</option>
+                <option value="codigo">Ordenar por código</option>
+                <option value="estoque">Menor estoque primeiro</option>
+                <option value="valor">Maior valor em estoque</option>
+            </select>
+            <label class="check"><input type="checkbox" v-model="mostrarInativas"> Mostrar inativas</label>
+        </div>
+
+        <p class="search-count" v-if="temFiltro">
+            [[ filtradas.length ]] peça(s) encontrada(s) · <a href="#" @click.prevent="limpar">limpar filtros</a>
+        </p>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Peça</th>
+                        <th>Categoria</th>
+                        <th>Local</th>
+                        <th class="num">Estoque</th>
+                        <th class="num">Mínimo</th>
+                        <th class="num">Custo</th>
+                        <th class="num">Venda</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="p in filtradas" :key="p.id" class="is-link" :class="{ 'is-inativo': !p.ativo }" @click="abrir(p)">
+                        <td><a :href="p.id + '/'">[[ p.codigo ]]</a></td>
+                        <td>
+                            <strong>[[ p.nome ]]</strong>
+                            <br><span class="muted">[[ [p.fabricante, p.fornecedor].filter(Boolean).join(' · ') || '-' ]]</span>
+                        </td>
+                        <td>[[ p.categoria || '-' ]]</td>
+                        <td>[[ p.localizacao || '-' ]]</td>
+                        <td class="num"><strong>[[ numero(p.estoque) ]]</strong> [[ p.unidade ]]</td>
+                        <td class="num">[[ numero(p.minimo) ]]</td>
+                        <td class="num">[[ moeda(p.custo) ]]</td>
+                        <td class="num">[[ moeda(p.venda) ]]</td>
+                        <td>
+                            <span class="badge" :class="'badge-estoque-' + situacao(p)">[[ rotuloSituacao(p) ]]</span>
+                            <span class="badge" v-if="!p.ativo">Inativa</span>
+                        </td>
+                    </tr>
+                    <tr v-if="filtradas.length === 0">
+                        <td colspan="9" class="muted" style="text-align:center; padding:1.5rem;">
+                            [[ pecas.length ? 'Nenhuma peça encontrada.' : 'Nenhuma peça cadastrada.' ]]
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{ pecas|json_script:"pecas-dados" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/vue@3.5.13/dist/vue.global.prod.js"></script>
+<script src="{% static 'oficina/js/estoque-vue.js' %}"></script>
+{% endblock %}

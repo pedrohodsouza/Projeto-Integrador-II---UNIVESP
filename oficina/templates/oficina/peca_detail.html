@@ -1,0 +1,89 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}{{ peca.nome }} - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<div class="page page-medium">
+    <a href="{% url 'peca_list' %}" class="back-link">‹ Estoque</a>
+    <div class="page-header">
+        <div>
+            <h1>{{ peca.nome }}</h1>
+            <span class="badge">{{ peca.codigo }}</span>
+            {% if peca.estoque_atual <= 0 %}<span class="badge badge-estoque-zerado">Sem estoque</span>
+            {% elif peca.abaixo_minimo %}<span class="badge badge-estoque-baixo">Abaixo do mínimo</span>
+            {% else %}<span class="badge badge-estoque-ok">Estoque OK</span>{% endif %}
+            {% if not peca.ativo %}<span class="badge">Inativa</span>{% endif %}
+        </div>
+        <a class="btn btn-secondary" href="{% url 'peca_edit' peca.pk %}">Editar</a>
+    </div>
+
+    <div class="detail-grid">
+        <div>
+            <section class="panel">
+                <h2>Dados da peça</h2>
+                <dl class="info-list">
+                    <div><dt>Estoque atual</dt><dd class="destaque">{{ peca.estoque_atual|floatformat:"-2" }} {{ peca.get_unidade_display|lower }}(s)</dd></div>
+                    <div><dt>Estoque mínimo</dt><dd>{{ peca.estoque_minimo|floatformat:"-2" }}</dd></div>
+                    <div><dt>Preço de custo</dt><dd>R$ {{ peca.preco_custo|floatformat:2 }}</dd></div>
+                    <div><dt>Preço de venda</dt><dd>R$ {{ peca.preco_venda|floatformat:2 }}</dd></div>
+                    <div><dt>Valor em estoque (custo)</dt><dd>R$ {{ peca.valor_em_estoque|floatformat:2 }}</dd></div>
+                    <div><dt>Localização</dt><dd>{{ peca.localizacao|default:"-" }}</dd></div>
+                    <div><dt>Categoria</dt><dd>{{ peca.categoria|default:"-" }}</dd></div>
+                    <div><dt>Fabricante</dt><dd>{{ peca.fabricante|default:"-" }}</dd></div>
+                    <div><dt>Fornecedor principal</dt><dd>
+                        {% if peca.fornecedor %}{{ peca.fornecedor.nome }}{% if peca.fornecedor.telefone %}<br><span class="muted">{{ peca.fornecedor.telefone }}</span>{% endif %}{% else %}-{% endif %}
+                    </dd></div>
+                </dl>
+            </section>
+
+            <section class="panel">
+                <h2>Movimentações</h2>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Data</th><th>Tipo</th><th class="num">Qtd.</th><th class="num">Saldo</th><th>Origem / motivo</th><th>Usuário</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for m in movimentacoes %}
+                            <tr>
+                                <td>{{ m.data|date:"d/m/Y H:i" }}</td>
+                                <td><span class="badge badge-mov-{{ m.tipo }}">{{ m.get_tipo_display }}</span></td>
+                                <td class="num">{% if m.tipo == 'saida' %}-{% elif m.quantidade > 0 %}+{% endif %}{{ m.quantidade|floatformat:"-2" }}</td>
+                                <td class="num">{{ m.saldo_apos|floatformat:"-2" }}</td>
+                                <td>
+                                    {% if m.atendimento %}<a href="{% url 'atendimento_detail' m.atendimento.pk %}">{{ m.atendimento.numero }}</a> · {% endif %}
+                                    {{ m.motivo|default:"-" }}
+                                    {% if m.documento %}<br><span class="muted">Doc.: {{ m.documento }}</span>{% endif %}
+                                </td>
+                                <td>{{ m.usuario.username|default:"-" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6" class="muted" style="text-align:center;">Nenhuma movimentação registrada.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <aside>
+            <form class="panel form-card" method="post" action="{% url 'peca_movimentar' peca.pk %}">
+                <h2>Registrar movimentação</h2>
+                {% csrf_token %}
+                {% for field in form %}
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+                </p>
+                {% endfor %}
+                <button type="submit" class="btn btn-block">Registrar</button>
+                <p class="muted" style="margin-top:0.75rem;">
+                    <strong>Entrada:</strong> compra/reposição. <strong>Saída:</strong> uso fora de uma OS, perda ou devolução ao fornecedor.
+                    <strong>Ajuste:</strong> corrige o saldo após contagem. Peças usadas em atendimentos dão baixa automaticamente.
+                </p>
+            </form>
+        </aside>
+    </div>
+</div>
+{% endblock %}
