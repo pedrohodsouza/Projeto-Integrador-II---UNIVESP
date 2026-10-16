@@ -102,10 +102,10 @@ else:
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
+# Regras de senha: mínimo de 8 caracteres, não pode ser só números nem uma senha comum.
+# A regra de "parecida com nome/e-mail" foi removida porque recusava senhas legítimas
+# (ex.: "Oficina@2026" para um e-mail @oficina.com) com uma mensagem confusa.
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },

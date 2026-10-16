@@ -193,3 +193,26 @@ class CodigoAutomaticoTests(TestCase):
     def test_formulario_de_peca_nao_pede_codigo(self):
         from .forms import PecaForm
         self.assertNotIn('codigo', PecaForm().fields)
+
+
+class UsuarioTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser('chefe', password='senha-do-chefe')
+        self.client.force_login(self.admin)
+
+    def dados(self, senha):
+        return {'username': 'mecanico1', 'first_name': 'Carlos', 'email': 'c@oficina.com',
+                'password1': senha, 'password2': senha}
+
+    def test_cria_usuario_que_consegue_entrar(self):
+        resposta = self.client.post(reverse('usuario_create'), self.dados('Oficina@2026'), follow=True)
+        self.assertRedirects(resposta, reverse('usuario_list'))
+        self.assertContains(resposta, 'mecanico1')
+        self.client.logout()
+        self.assertTrue(self.client.login(username='mecanico1', password='Oficina@2026'))
+
+    def test_senha_fraca_mostra_motivo_e_nao_cria(self):
+        resposta = self.client.post(reverse('usuario_create'), self.dados('123'))
+        self.assertEqual(resposta.status_code, 200)
+        self.assertContains(resposta, 'O usuário não foi criado.')
+        self.assertFalse(User.objects.filter(username='mecanico1').exists())

@@ -7,7 +7,31 @@
     <h1>Novo usuário</h1>
     <form class="form-card" method="post" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
+
+        {% if form.errors %}
+        <div class="alert alert-error form-erros" role="alert">
+            <strong>O usuário não foi criado.</strong> Corrija o que está abaixo e salve de novo:
+            <ul>
+                {% for erro in form.non_field_errors %}<li>{{ erro }}</li>{% endfor %}
+                {% for campo in form %}{% for erro in campo.errors %}
+                <li><strong>{{ campo.label }}:</strong> {{ erro }}</li>
+                {% endfor %}{% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% for campo in form %}
+        <p class="{% if campo.errors %}campo-com-erro{% endif %}">
+            {{ campo.label_tag }}
+            {{ campo }}
+            {% if campo.name == 'password1' %}
+            <span class="helptext">Mínimo de 8 caracteres, não pode ser só números, nem uma senha comum (ex.: 12345678, senha123).</span>
+            {% elif campo.name == 'username' %}
+            <span class="helptext">Usado para entrar no sistema. Sem espaços ou acentos; pode usar letras, números e @ . + - _</span>
+            {% endif %}
+        </p>
+        {% endfor %}
+
         <div class="form-actions">
             <a class="btn btn-secondary" href="{% url 'usuario_list' %}">Cancelar</a>
             <button type="submit" class="btn">Salvar</button>

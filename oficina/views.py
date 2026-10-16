@@ -122,8 +122,8 @@ def usuario_create(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Usuário cadastrado com sucesso.')
+            usuario = form.save()
+            messages.success(request, f'Usuário "{usuario.username}" cadastrado com sucesso. Ele já pode entrar no sistema.')
             return redirect('usuario_list')
     else:
         form = UsuarioForm()
