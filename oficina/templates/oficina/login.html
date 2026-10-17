@@ -1,22 +1,230 @@
 {% extends "oficina/base.html" %}
 {% load static %}
 
-{% block title %}Login - Oficina Mecânica{% endblock %}
+{% block title %}Login - Oficina360{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'oficina/css/pages/login.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="login-page">
-    <form class="login-card" method="post" novalidate>
-        {% csrf_token %}
-        <h1>Oficina Mecânica</h1>
-        <p class="subtitle">Acesse o sistema</p>
 
-        <label for="username">Usuário</label>
-        <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+    <!-- Painel esquerdo: decorativo -->
+    <!-- Painel esquerdo: decorativo -->
+    <div class="login-panel-left">
 
-        <label for="password">Senha</label>
-        <input type="password" id="password" name="password" autocomplete="current-password" required>
+        <!-- Sprite da engrenagem (usado pelas engrenagens do fundo) -->
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+            <symbol id="gear-shape" viewBox="-100 -100 200 200">
+                <path fill="currentColor" fill-rule="evenodd"
+                    d="M-64 0a64 64 0 1 0 128 0a64 64 0 1 0-128 0ZM-26 0a26 26 0 1 0 52 0a26 26 0 1 0-52 0Z" />
+                <g fill="currentColor">
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(30)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(60)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(90)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(120)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(150)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(180)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(210)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(240)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(270)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(300)" />
+                    <rect x="-10" y="-92" width="20" height="36" rx="4" transform="rotate(330)" />
+                </g>
+            </symbol>
+        </svg>
 
-        <button type="submit">Entrar</button>
-    </form>
+        <!-- Engrenagens ao fundo -->
+        <div class="login-gears parallax" style="--depth:-14" aria-hidden="true">
+            <svg class="login-gear login-gear--big">
+                <use href="#gear-shape" />
+            </svg>
+            <svg class="login-gear login-gear--small">
+                <use href="#gear-shape" />
+            </svg>
+        </div>
+
+        <!-- Marca -->
+        <div class="login-brand parallax" style="--depth:8">
+            <div class="login-brand-icon-wrapper">
+                <img src="{% static 'oficina/img/favicon.png' %}" alt="Oficina360" class="login-brand-symbol">
+            </div>
+            <h1>Oficina<span class="brand-360">360</span></h1>
+            <p class="login-slogan">Sua oficina organizada<br>em um só lugar.</p>
+
+            <div class="login-tags">
+                <span class="login-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    </svg>
+                    Clientes
+                </span>
+                <span class="login-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+                        <circle cx="7" cy="17" r="2" />
+                        <path d="M9 17h6" />
+                        <circle cx="17" cy="17" r="2" />
+                    </svg>
+                    Veículos
+                </span>
+                <span class="login-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Usuários
+                </span>
+            </div>
+        </div>
+
+        <!-- Pilares da marca -->
+        <div class="login-pillars parallax" style="--depth:6">
+            <div class="login-pillar">
+                <span class="pillar-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </span>
+                <strong>Organização</strong>
+                <small>e controle</small>
+            </div>
+
+            <div class="login-pillar">
+                <span class="pillar-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                </span>
+                <strong>Agilidade</strong>
+                <small>no dia a dia</small>
+            </div>
+
+            <div class="login-pillar">
+                <span class="pillar-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18" />
+                        <path d="M18 17V9" />
+                        <path d="M13 17V5" />
+                        <path d="M8 17v-3" />
+                    </svg>
+                </span>
+                <strong>Mais eficiência</strong>
+                <small>para sua oficina</small>
+            </div>
+        </div>
+
+        <!-- Anéis e partículas -->
+        <div class="login-deco-ring login-deco-ring--1 parallax" style="--depth:-24"></div>
+        <div class="login-deco-ring login-deco-ring--2 parallax" style="--depth:-18"></div>
+        <div class="login-deco-ring login-deco-ring--3 parallax" style="--depth:-10"></div>
+
+        <div class="login-particles" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <!-- Painel direito: formulário -->
+    <div class="login-panel-right">
+        <form class="login-form" method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="login-form-header">
+                <!-- <img src="{% static 'oficina/img/logo.png' %}" alt="Oficina360" class="login-form-logo"> -->
+                <h2>Bem-vindo à Oficina360</h2>
+                <p>Acesse sua conta para continuar</p>
+            </div>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                        </svg>
+                    </span>
+                    <input type="text" id="username" name="username" autocomplete="username" required autofocus
+                        placeholder="Digite seu usuário">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <div class="input-wrapper password-wrapper">
+                    <span class="input-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </span>
+                    <input type="password" id="password" name="password" autocomplete="current-password" required
+                        placeholder="Digite sua senha">
+                    <button type="button" class="password-toggle" id="password-toggle" aria-label="Mostrar senha"
+                        title="Mostrar senha">
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn" id="login-submit-btn">
+                <span>Entrar</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </button>
+        </form>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const toggle = document.getElementById('password-toggle');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    const eyeOpen = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>`;
+    const eyeClosed = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="2" y1="2" x2="22" y2="22"/>`;
+
+    toggle.addEventListener('click', () => {
+        const isHidden = passwordInput.type === 'password';
+        passwordInput.type = isHidden ? 'text' : 'password';
+        eyeIcon.innerHTML = isHidden ? eyeClosed : eyeOpen;
+        toggle.classList.toggle('is-active', isHidden);
+        toggle.setAttribute('aria-label', isHidden ? 'Esconder senha' : 'Mostrar senha');
+    });
+</script>
 {% endblock %}

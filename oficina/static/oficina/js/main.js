@@ -34,3 +34,28 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
     setupUserMenu();
 });
+
+// Parallax: as camadas do painel esquerdo acompanham o mouse
+(function () {
+    const panel = document.querySelector('.login-panel-left');
+    if (!panel || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let frame = null;
+
+    function setPos(x, y) {
+        if (frame) cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+            panel.style.setProperty('--mx', x.toFixed(3));
+            panel.style.setProperty('--my', y.toFixed(3));
+        });
+    }
+
+    panel.addEventListener('mousemove', (e) => {
+        const r = panel.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width - 0.5) * 2;   // vai de -1 a 1
+        const y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        setPos(x, y);
+    });
+
+    panel.addEventListener('mouseleave', () => setPos(0, 0));
+})();

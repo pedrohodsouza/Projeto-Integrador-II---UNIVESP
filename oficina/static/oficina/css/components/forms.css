@@ -1,0 +1,78 @@
+/* ==========================================================
+   Oficina360 – Componente: Formulários
+   Estilos para cartões de formulário do Django, inputs e botões de ação.
+   ========================================================== */
+
+.form-card {
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: 0 1px 4px rgba(15, 45, 91, 0.06);
+}
+
+.form-card p {
+    margin: 0 0 1rem;
+}
+
+.form-card label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--azul-principal);
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid var(--cor-borda);
+    background: var(--cor-fundo);
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-size: 0.95rem;
+    color: var(--cor-texto-primario);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: var(--azul-tecnologia);
+    background: var(--cor-fundo-card);
+    box-shadow: 0 0 0 3px var(--azul-tecnologia-foco);
+}
+
+.form-card .helptext {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--cor-texto-secundario);
+    margin-top: 0.25rem;
+}
+
+.form-card ul.errorlist {
+    color: var(--cor-erro-texto);
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+    padding-left: 1.1rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn,
+    .form-actions .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}

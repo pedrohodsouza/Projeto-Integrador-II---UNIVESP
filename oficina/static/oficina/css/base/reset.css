@@ -1,0 +1,20 @@
+/* ==========================================================
+   Oficina360 – Base: Reset
+   Configurações globais de box-sizing, corpo e links.
+   ========================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-base);
+    background: var(--cor-fundo);
+    color: var(--cor-texto-primario);
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+}

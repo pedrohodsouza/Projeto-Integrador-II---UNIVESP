@@ -1,0 +1,27 @@
+/* ==========================================================
+   Oficina360 – Componente: Alerts
+   Mensagens de notificação e alertas de sucesso/erro do sistema.
+   ========================================================== */
+
+.messages {
+    margin-bottom: 1rem;
+}
+
+.alert {
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.alert-error {
+    background: var(--cor-erro-bg);
+    color: var(--cor-erro-texto);
+    border-left: 3px solid var(--cor-erro);
+}
+
+.alert-success {
+    background: var(--cor-sucesso-bg);
+    color: var(--cor-sucesso-texto);
+    border-left: 3px solid var(--cor-sucesso);
+}

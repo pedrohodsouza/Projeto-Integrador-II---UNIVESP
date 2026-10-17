@@ -1,0 +1,37 @@
+/* ==========================================================
+   Oficina360 – Componente: Topbar
+   Cabeçalho superior com logotipo e navegação principal.
+   ========================================================== */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 56px;
+    background: var(--azul-principal);
+    position: relative;
+    z-index: 20;
+}
+
+.topbar-title {
+    font-family: var(--font-titulo);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.15rem;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.topbar-logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}

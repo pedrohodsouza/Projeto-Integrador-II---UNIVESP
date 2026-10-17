@@ -1,0 +1,23 @@
+/* ==========================================================
+   Oficina360 – Base: Tipografia
+   Estilos padronizados de cabeçalhos, destaques de marca e relógio.
+   ========================================================== */
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-titulo);
+    font-weight: 700;
+    color: var(--cor-texto-primario);
+}
+
+.brand-360 {
+    color: var(--laranja);
+}
+
+.clock {
+    font-variant-numeric: tabular-nums;
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0;
+}

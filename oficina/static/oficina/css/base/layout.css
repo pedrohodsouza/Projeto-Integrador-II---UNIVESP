@@ -1,0 +1,61 @@
+/* ==========================================================
+   Oficina360 – Base: Layout
+   Estrutura compartilhada das páginas internas e navegação básica.
+   ========================================================== */
+
+.content-area {
+    max-width: 100%;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--azul-tecnologia);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+    .back-link {
+        display: none;
+    }
+}
+
+.page {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.page-narrow {
+    max-width: 420px;
+}
+
+.page h1 {
+    font-family: var(--font-titulo);
+    font-size: 1.4rem;
+    margin: 0 0 1.5rem;
+    color: var(--azul-principal);
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+.page-title-block {
+    margin-bottom: 1.5rem;
+}
