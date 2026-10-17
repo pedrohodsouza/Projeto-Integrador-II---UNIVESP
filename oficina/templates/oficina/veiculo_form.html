@@ -1,17 +1,42 @@
 {% extends "oficina/base.html" %}
 
-{% block title %}Novo veículo - Oficina Mecânica{% endblock %}
+{% block title %}{% if veiculo %}Editar veículo{% else %}Novo veículo{% endif %} - Oficina Mecânica{% endblock %}
 
 {% block content %}
 <main class="page page-narrow">
-    <h1>Novo veículo</h1>
+    <h1>{% if veiculo %}Editar veículo {{ veiculo.placa }}{% else %}Novo veículo{% endif %}</h1>
+    {% if veiculo %}<p class="muted">Código: <strong>{{ veiculo.codigo }}</strong></p>{% endif %}
     <form class="form-card" method="post" novalidate>
         {% csrf_token %}
+        {% include "oficina/_form_erros.html" %}
         {{ form.as_p }}
         <div class="form-actions">
             <a class="btn btn-secondary" href="{% url 'veiculo_list' %}">Cancelar</a>
             <button type="submit" class="btn">Salvar</button>
         </div>
     </form>
+
+    {% if veiculo %}
+    <section class="panel" style="margin-top: 1rem;">
+        <h2>Atendimentos deste veículo</h2>
+        {% for a in atendimentos %}
+        <p style="margin: 0 0 0.4rem;">
+            <a href="{% url 'atendimento_detail' a.pk %}">{{ a.numero }}</a>
+            <span class="badge badge-st-{{ a.status }}">{{ a.get_status_display }}</span>
+            <span class="muted">· {{ a.data_entrada|date:"d/m/Y" }}</span>
+        </p>
+        {% empty %}
+        <p class="muted" style="margin: 0;">Nenhum atendimento registrado.</p>
+        {% endfor %}
+        <a class="btn btn-secondary" style="margin-top: 0.5rem;" href="{% url 'atendimento_create' %}?veiculo={{ veiculo.pk }}">+ Abrir atendimento</a>
+    </section>
+
+    <form class="zona-exclusao" method="post" action="{% url 'veiculo_delete' veiculo.pk %}"
+          onsubmit="return confirm('Excluir o veículo {{ veiculo.placa|escapejs }}? Esta ação não pode ser desfeita.');">
+        {% csrf_token %}
+        <span class="muted">Só é possível excluir veículos sem atendimentos registrados.</span>
+        <button type="submit" class="btn-link-danger">Excluir veículo</button>
+    </form>
+    {% endif %}
 </main>
 {% endblock %}

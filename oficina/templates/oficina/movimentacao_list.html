@@ -1,0 +1,47 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}Movimentações de estoque - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<div class="page page-wide">
+    <a href="{% url 'peca_list' %}" class="back-link">‹ Estoque</a>
+    <div class="page-header">
+        <h1>Movimentações de estoque</h1>
+        <div class="segmented" role="group" aria-label="Filtrar por tipo">
+            <a class="segmented-link{% if not tipo_atual %} is-active{% endif %}" href="{% url 'movimentacao_list' %}">Todas</a>
+            {% for valor, rotulo in tipos %}
+            <a class="segmented-link{% if tipo_atual == valor %} is-active{% endif %}" href="?tipo={{ valor }}">{{ rotulo }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr><th>Data</th><th>Peça</th><th>Tipo</th><th class="num">Qtd.</th><th class="num">Saldo</th><th class="num">Custo unit.</th><th>Origem / motivo</th><th>Usuário</th></tr>
+            </thead>
+            <tbody>
+                {% for m in movimentacoes %}
+                <tr>
+                    <td>{{ m.data|date:"d/m/Y H:i" }}</td>
+                    <td><a href="{% url 'peca_detail' m.peca.pk %}">{{ m.peca.codigo }}</a><br><span class="muted">{{ m.peca.nome }}</span></td>
+                    <td><span class="badge badge-mov-{{ m.tipo }}">{{ m.get_tipo_display }}</span></td>
+                    <td class="num">{% if m.tipo == 'saida' %}-{% elif m.quantidade > 0 %}+{% endif %}{{ m.quantidade|floatformat:"-2" }} {{ m.peca.unidade }}</td>
+                    <td class="num">{{ m.saldo_apos|floatformat:"-2" }}</td>
+                    <td class="num">R$ {{ m.custo_unitario|floatformat:2 }}</td>
+                    <td>
+                        {% if m.atendimento %}<a href="{% url 'atendimento_detail' m.atendimento.pk %}">{{ m.atendimento.numero }}</a> · {% endif %}
+                        {{ m.motivo|default:"-" }}
+                        {% if m.documento %}<br><span class="muted">Doc.: {{ m.documento }}</span>{% endif %}
+                    </td>
+                    <td>{{ m.usuario.username|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" class="muted" style="text-align:center; padding:1.5rem;">Nenhuma movimentação registrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="muted">Exibindo as 200 movimentações mais recentes.</p>
+</div>
+{% endblock %}

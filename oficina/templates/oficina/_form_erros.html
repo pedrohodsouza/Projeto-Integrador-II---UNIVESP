@@ -1,0 +1,11 @@
+{% if form.errors %}
+<div class="alert alert-error form-erros" role="alert">
+    <strong>Não foi possível salvar.</strong> Corrija o que está abaixo e salve de novo:
+    <ul>
+        {% for erro in form.non_field_errors %}<li>{{ erro }}</li>{% endfor %}
+        {% for campo in form %}{% for erro in campo.errors %}
+        <li><strong>{{ campo.label }}:</strong> {{ erro }}</li>
+        {% endfor %}{% endfor %}
+    </ul>
+</div>
+{% endif %}

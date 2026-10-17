@@ -1,0 +1,37 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}{% if peca %}Editar peça{% else %}Nova peça{% endif %} - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h1>{% if peca %}Editar {{ peca.nome }}{% else %}Nova peça{% endif %}</h1>
+    {% if peca %}<p class="muted">Código: <strong>{{ peca.codigo }}</strong></p>{% else %}<p class="muted">O código da peça (PEC-00000) é gerado automaticamente ao salvar.</p>{% endif %}
+    <form class="form-card" method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-grid">
+            {% for field in form %}
+            <p class="{% if field.name == 'nome' or field.name == 'ativo' %}span-2{% endif %}{% if field.name == 'ativo' %} check-field{% endif %}">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+                {{ field.errors }}
+            </p>
+            {% endfor %}
+        </div>
+        <datalist id="categorias">
+            {% for categoria in form.categorias %}<option value="{{ categoria }}">{% endfor %}
+        </datalist>
+        <datalist id="fabricantes">
+            {% for fabricante in form.fabricantes %}<option value="{{ fabricante }}">{% endfor %}
+        </datalist>
+        {% if peca %}
+        <p class="muted">O estoque atual ({{ peca.estoque_atual|floatformat:"-2" }} {{ peca.unidade }}) só muda por movimentações, para manter o histórico.</p>
+        {% endif %}
+        <div class="form-actions">
+            <a class="btn btn-secondary" href="{% if peca %}{% url 'peca_detail' peca.pk %}{% else %}{% url 'peca_list' %}{% endif %}">Cancelar</a>
+            <button type="submit" class="btn">Salvar</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

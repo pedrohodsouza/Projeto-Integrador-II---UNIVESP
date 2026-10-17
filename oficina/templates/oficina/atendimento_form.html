@@ -1,0 +1,29 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}{% if atendimento %}Editar {{ atendimento.numero }}{% else %}Novo atendimento{% endif %} - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h1>{% if atendimento %}Editar {{ atendimento.numero }}{% else %}Novo atendimento{% endif %}</h1>
+    <form class="form-card" method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-grid">
+            {% for field in form %}
+            <p class="{% if field.name in 'veiculo queixa diagnostico observacoes' %}span-2{% endif %}">
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </p>
+            {% endfor %}
+        </div>
+        {% if not atendimento %}
+        <p class="muted">Não encontrou o veículo? <a href="{% url 'veiculo_create' %}">Cadastre-o primeiro</a>.</p>
+        {% endif %}
+        <div class="form-actions">
+            <a class="btn btn-secondary" href="{% if atendimento %}{% url 'atendimento_detail' atendimento.pk %}{% else %}{% url 'atendimento_list' %}{% endif %}">Cancelar</a>
+            <button type="submit" class="btn">{% if atendimento %}Salvar alterações{% else %}Abrir atendimento{% endif %}</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

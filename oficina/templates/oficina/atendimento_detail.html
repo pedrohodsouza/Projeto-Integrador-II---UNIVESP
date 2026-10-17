@@ -1,0 +1,178 @@
+{% extends "oficina/base.html" %}
+
+{% block title %}{{ atendimento.numero }} - Oficina Mecânica{% endblock %}
+
+{% block content %}
+{% with a=atendimento v=atendimento.veiculo %}
+<div class="page page-medium">
+    <div class="page-header">
+        <div>
+            <h1>{{ a.numero }} · {{ v.placa }}</h1>
+            <span class="badge badge-st-{{ a.status }}">{{ a.get_status_display }}</span>
+            <span class="badge badge-prio-{{ a.prioridade }}">Prioridade {{ a.get_prioridade_display|lower }}</span>
+            {% if a.atrasado %}<span class="badge badge-atraso">Atrasado</span>{% endif %}
+        </div>
+        <a class="btn btn-secondary" href="{% url 'atendimento_edit' a.pk %}">Editar</a>
+    </div>
+
+    {% if a.status != 'cancelado' %}
+    <div class="etapas" title="Progresso: {{ a.get_status_display }}">
+        {% for valor, rotulo in a.Status.choices %}{% if valor != 'cancelado' %}
+        <span class="etapa{% if valor == a.status %} is-current{% elif forloop.counter0 < etapa_atual %} is-done{% endif %}" title="{{ rotulo }}"></span>
+        {% endif %}{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="detail-grid">
+        <div>
+            <section class="panel">
+                <h2>Veículo e cliente</h2>
+                <dl class="info-list">
+                    <div><dt>Veículo</dt><dd>{{ v.marca }} {{ v.modelo }}{% if v.ano %} · {{ v.ano }}{% endif %}</dd></div>
+                    <div><dt>Placa</dt><dd>{{ v.placa }}</dd></div>
+                    <div><dt>Cliente</dt><dd>{{ v.cliente.nome }}</dd></div>
+                    <div><dt>Contato</dt><dd>{{ v.cliente.telefone|default:"-" }}{% if v.cliente.email %}<br><span class="muted">{{ v.cliente.email }}</span>{% endif %}</dd></div>
+                    <div><dt>KM na entrada</dt><dd>{{ a.km_entrada|default:"-" }}</dd></div>
+                    <div><dt>Mecânico responsável</dt><dd>{% if a.responsavel %}{{ a.responsavel.get_full_name|default:a.responsavel.username }}{% else %}-{% endif %}</dd></div>
+                </dl>
+            </section>
+
+            <section class="panel">
+                <h2>Relato do cliente</h2>
+                <p class="texto-livre">{{ a.queixa }}</p>
+                <h2>Diagnóstico</h2>
+                <p class="texto-livre">{{ a.diagnostico|default:"Ainda não informado." }}</p>
+                {% if a.observacoes %}
+                <h2>Observações</h2>
+                <p class="texto-livre">{{ a.observacoes }}</p>
+                {% endif %}
+            </section>
+
+            <section class="panel">
+                <h2>Serviços e peças</h2>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Tipo</th><th>Descrição</th><th class="num">Qtd.</th><th class="num">Unitário</th><th class="num">Total</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            {% for item in a.itens.all %}
+                            <tr>
+                                <td><span class="badge">{{ item.get_tipo_display }}</span></td>
+                                <td>
+                                    {{ item.descricao }}
+                                    {% if item.peca %}<br><a class="muted" href="{% url 'peca_detail' item.peca.pk %}">{{ item.peca.codigo }} · do estoque</a>{% endif %}
+                                </td>
+                                <td class="num">{{ item.quantidade|floatformat:"-2" }}</td>
+                                <td class="num">R$ {{ item.valor_unitario|floatformat:2 }}</td>
+                                <td class="num">R$ {{ item.total|floatformat:2 }}</td>
+                                <td class="num">
+                                    <form method="post" action="{% url 'atendimento_item_delete' a.pk item.pk %}" onsubmit="return confirm('Remover este item?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-link-danger">Remover</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6" class="muted" style="text-align:center;">Nenhum serviço ou peça lançado.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                        {% if a.itens.all %}
+                        <tfoot>
+                            <tr><td colspan="4">Serviços</td><td class="num">R$ {{ a.total_servicos|floatformat:2 }}</td><td></td></tr>
+                            <tr><td colspan="4">Peças</td><td class="num">R$ {{ a.total_pecas|floatformat:2 }}</td><td></td></tr>
+                            <tr><td colspan="4">Total</td><td class="num">R$ {{ a.total|floatformat:2 }}</td><td></td></tr>
+                        </tfoot>
+                        {% endif %}
+                    </table>
+                </div>
+                {% if a.em_aberto %}
+                <form class="item-form form-card" style="border:none; padding:0;" method="post" action="{% url 'atendimento_item_add' a.pk %}">
+                    {% csrf_token %}
+                    <p>{{ item_form.tipo.label_tag }}{{ item_form.tipo }}</p>
+                    <p class="span-full">{{ item_form.peca.label_tag }}{{ item_form.peca }}</p>
+                    <p class="span-2">{{ item_form.descricao.label_tag }}{{ item_form.descricao }}</p>
+                    <p>{{ item_form.quantidade.label_tag }}{{ item_form.quantidade }}</p>
+                    <p>{{ item_form.valor_unitario.label_tag }}{{ item_form.valor_unitario }}</p>
+                    <button type="submit" class="btn">Adicionar</button>
+                </form>
+                <p class="muted" style="margin:0.5rem 0 0;">
+                    Ao escolher uma peça do estoque, a descrição e o preço de venda são preenchidos automaticamente se ficarem em branco, e o estoque é baixado.
+                    Remover o item ou cancelar o atendimento devolve a peça ao estoque.
+                </p>
+                {% endif %}
+            </section>
+        </div>
+
+        <aside>
+            <form class="panel form-card" method="post" action="{% url 'atendimento_status' a.pk %}">
+                <h2>Atualizar etapa</h2>
+                {% csrf_token %}
+                <p>{{ status_form.status.label_tag }}{{ status_form.status }}</p>
+                <p>{{ status_form.comentario.label_tag }}{{ status_form.comentario }}</p>
+                <button type="submit" class="btn btn-block">Salvar</button>
+            </form>
+
+            <section class="panel">
+                <h2>Datas</h2>
+                <dl class="info-list" style="grid-template-columns: 1fr;">
+                    <div><dt>Entrada</dt><dd>{{ a.data_entrada|date:"d/m/Y H:i" }} <span class="muted">({{ a.data_entrada|timesince }})</span></dd></div>
+                    <div><dt>Previsão de entrega</dt><dd>{{ a.previsao_entrega|date:"d/m/Y"|default:"-" }}</dd></div>
+                    {% if a.data_conclusao %}<div><dt>Concluído em</dt><dd>{{ a.data_conclusao|date:"d/m/Y H:i" }}</dd></div>{% endif %}
+                    {% if a.data_entrega %}<div><dt>Entregue em</dt><dd>{{ a.data_entrega|date:"d/m/Y H:i" }}</dd></div>{% endif %}
+                    {% if a.criado_por %}<div><dt>Aberto por</dt><dd>{{ a.criado_por.get_full_name|default:a.criado_por.username }}</dd></div>{% endif %}
+                </dl>
+            </section>
+
+            <section class="panel">
+                <h2>Histórico</h2>
+                <ul class="timeline">
+                    {% for h in a.historico.all %}
+                    <li>
+                        <strong>{{ h.get_status_novo_display }}</strong>
+                        <div class="muted">{{ h.data|date:"d/m/Y H:i" }}{% if h.usuario %} · {{ h.usuario.get_full_name|default:h.usuario.username }}{% endif %}</div>
+                        {% if h.comentario %}<div class="texto-livre" style="margin:0.2rem 0 0;">{{ h.comentario }}</div>{% endif %}
+                    </li>
+                    {% empty %}
+                    <li class="muted">Sem registros.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            {% if outros_atendimentos %}
+            <section class="panel">
+                <h2>Outros atendimentos deste veículo</h2>
+                <ul class="timeline">
+                    {% for o in outros_atendimentos %}
+                    <li>
+                        <a href="{% url 'atendimento_detail' o.pk %}">{{ o.numero }}</a>
+                        <span class="badge badge-st-{{ o.status }}">{{ o.get_status_display }}</span>
+                        <div class="muted">{{ o.data_entrada|date:"d/m/Y" }} · {{ o.queixa|truncatechars:50 }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+        </aside>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}
+
+{% block extra_js %}
+{{ precos_pecas|json_script:"precos-pecas" }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const peca = document.getElementById('id_peca');
+        if (!peca) return;
+        const precos = JSON.parse(document.getElementById('precos-pecas').textContent);
+        peca.addEventListener('change', () => {
+            const dados = precos[peca.value];
+            if (!dados) return;
+            document.getElementById('id_tipo').value = 'peca';
+            document.getElementById('id_descricao').value = dados.nome;
+            document.getElementById('id_valor_unitario').value = dados.preco;
+        });
+    });
+</script>
+{% endblock %}

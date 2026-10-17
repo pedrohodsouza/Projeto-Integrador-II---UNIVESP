@@ -10,10 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
+import sys
 from pathlib import Path
+
+import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -74,21 +81,31 @@ WSGI_APPLICATION = 'oficina_mecanica.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Banco de dados
+# Por padrão usa o PostgreSQL compartilhado do grupo (Supabase): basta baixar e rodar.
+# Para usar outro banco, defina DATABASE_URL no .env. Os testes usam SQLite local.
+BANCO_NUVEM_URL = (
+    'postgresql://postgres.qsmwbymwniieuwycktau:vS2P73HlU4lF1VBG'
+    '@aws-0-us-east-1.pooler.supabase.com:5432/postgres'
+)
+RODANDO_TESTES = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
+if RODANDO_TESTES:
+    DATABASES = {'default': dj_database_url.parse(f"sqlite:///{BASE_DIR / 'db.sqlite3'}")}
+else:
+    DATABASES = {
+        'default': dj_database_url.config(default=BANCO_NUVEM_URL, conn_max_age=60, conn_health_checks=True)
     }
-}
+
 
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
+# Regras de senha: mínimo de 8 caracteres, não pode ser só números nem uma senha comum.
+# A regra de "parecida com nome/e-mail" foi removida porque recusava senhas legítimas
+# (ex.: "Oficina@2026" para um e-mail @oficina.com) com uma mensagem confusa.
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },

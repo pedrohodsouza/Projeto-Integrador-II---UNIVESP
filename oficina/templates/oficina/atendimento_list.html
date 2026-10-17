@@ -1,0 +1,135 @@
+{% extends "oficina/base.html" %}
+{% load static %}
+
+{% block title %}Atendimentos - Oficina Mecânica{% endblock %}
+
+{% block content %}
+<div class="page page-wide">
+    <div class="page-header">
+        <h1>Atendimentos</h1>
+        <a class="btn" href="{% url 'atendimento_create' %}">+ Novo atendimento</a>
+    </div>
+
+    <div id="atendimentos-app" data-base-url="{% url 'atendimento_list' %}" v-cloak>
+        <div class="stats">
+            <button type="button" class="stat" :class="{ 'is-active': !temFiltro }" @click="limpar">
+                <span class="stat-valor">[[ indicadores.abertos ]]</span>
+                <span class="stat-rotulo">Em aberto</span>
+            </button>
+            <button type="button" class="stat" :class="{ 'is-active': filtroEtapa === 'em_execucao' }" @click="filtrarIndicador('execucao')">
+                <span class="stat-valor">[[ indicadores.emExecucao ]]</span>
+                <span class="stat-rotulo">Em execução</span>
+            </button>
+            <button type="button" class="stat stat--ok" :class="{ 'is-active': filtroEtapa === 'pronto' }" @click="filtrarIndicador('prontos')">
+                <span class="stat-valor">[[ indicadores.prontos ]]</span>
+                <span class="stat-rotulo">Prontos para retirada</span>
+            </button>
+            <button type="button" class="stat stat--alerta" :class="{ 'is-active': somenteAtrasados }" @click="filtrarIndicador('atrasados')">
+                <span class="stat-valor">[[ indicadores.atrasados ]]</span>
+                <span class="stat-rotulo">Atrasados</span>
+            </button>
+        </div>
+
+        <div class="toolbar">
+            <input class="search-input" type="search" v-model="busca"
+                   placeholder="Buscar por OS, placa, veículo, cliente, mecânico ou relato..." aria-label="Buscar atendimentos">
+            <select v-model="filtroEtapa" aria-label="Filtrar por etapa">
+                <option value="">Todas as etapas</option>
+                <option v-for="e in etapas" :key="e.valor" :value="e.valor">[[ e.rotulo ]]</option>
+            </select>
+            <select v-model="filtroPrioridade" aria-label="Filtrar por prioridade">
+                <option value="">Todas as prioridades</option>
+                <option value="urgente">Urgente</option>
+                <option value="alta">Alta</option>
+                <option value="normal">Normal</option>
+                <option value="baixa">Baixa</option>
+            </select>
+            <select v-model="filtroResponsavel" aria-label="Filtrar por mecânico">
+                <option value="">Todos os mecânicos</option>
+                <option value="-">Sem responsável</option>
+                <option v-for="r in responsaveis" :key="r" :value="r">[[ r ]]</option>
+            </select>
+            <label class="check"><input type="checkbox" v-model="somenteAtrasados"> Só atrasados</label>
+            <label class="check"><input type="checkbox" v-model="mostrarFinalizados"> Mostrar entregues/cancelados</label>
+            <div class="segmented" role="group" aria-label="Modo de visualização">
+                <button type="button" :class="{ 'is-active': visao === 'quadro' }" @click="visao = 'quadro'">Quadro</button>
+                <button type="button" :class="{ 'is-active': visao === 'lista' }" @click="visao = 'lista'">Lista</button>
+            </div>
+        </div>
+
+        <p class="search-count" v-if="temFiltro">
+            [[ filtrados.length ]] atendimento(s) encontrado(s) ·
+            <a href="#" @click.prevent="limpar">limpar filtros</a>
+        </p>
+
+        <div class="board" v-if="visao === 'quadro'">
+            <section class="board-col" v-for="col in colunas" :key="col.valor">
+                <header class="board-col-header">
+                    <span>[[ col.rotulo ]]</span>
+                    <span class="board-count">[[ col.itens.length ]]</span>
+                </header>
+                <a v-for="a in col.itens" :key="a.id" class="os-card" :class="'prio-' + a.prioridade"
+                   :href="a.id + '/'">
+                    <div class="os-card-top">
+                        <span>[[ a.numero ]]</span>
+                        <span :title="dataHora(a.entrada)">entrou [[ diasNaOficina(a.entrada) ]]</span>
+                    </div>
+                    <div class="os-card-placa">[[ a.placa ]]</div>
+                    <div class="os-card-linha">[[ a.veiculo ]] · [[ a.cliente ]]</div>
+                    <div class="os-card-linha" :title="a.queixa">[[ a.queixa ]]</div>
+                    <div class="os-card-linha">🔧 [[ a.responsavel || 'Sem responsável' ]]</div>
+                    <div class="os-card-tags">
+                        <span class="badge" :class="'badge-prio-' + a.prioridade" v-if="a.prioridade !== 'normal'">[[ a.prioridade_label ]]</span>
+                        <span class="badge badge-atraso" v-if="a.atrasado">Atrasado</span>
+                        <span class="badge" v-else-if="a.previsao && a.em_aberto">Previsão [[ data(a.previsao) ]]</span>
+                    </div>
+                </a>
+                <p class="board-empty" v-if="col.itens.length === 0">Nenhum veículo nesta etapa</p>
+            </section>
+        </div>
+
+        <div class="table-wrap" v-else>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>OS</th>
+                        <th>Veículo</th>
+                        <th>Cliente</th>
+                        <th>Etapa</th>
+                        <th>Prioridade</th>
+                        <th>Mecânico</th>
+                        <th>Entrada</th>
+                        <th>Previsão</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="a in filtrados" :key="a.id" class="is-link" @click="abrir(a)">
+                        <td><a :href="a.id + '/'">[[ a.numero ]]</a></td>
+                        <td><strong>[[ a.placa ]]</strong><br><span class="muted">[[ a.veiculo ]]</span></td>
+                        <td>[[ a.cliente ]]</td>
+                        <td><span class="badge" :class="'badge-st-' + a.status">[[ a.status_label ]]</span></td>
+                        <td><span class="badge" :class="'badge-prio-' + a.prioridade">[[ a.prioridade_label ]]</span></td>
+                        <td>[[ a.responsavel || '-' ]]</td>
+                        <td>[[ dataHora(a.entrada) ]]</td>
+                        <td>
+                            [[ data(a.previsao) ]]
+                            <span class="badge badge-atraso" v-if="a.atrasado">Atrasado</span>
+                        </td>
+                    </tr>
+                    <tr v-if="filtrados.length === 0">
+                        <td colspan="8" class="muted" style="text-align:center; padding:1.5rem;">
+                            [[ itens.length ? 'Nenhum atendimento encontrado.' : 'Nenhum atendimento registrado.' ]]
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{ atendimentos|json_script:"atendimentos-dados" }}
+{{ etapas|json_script:"etapas-dados" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'oficina/js/atendimentos-vue.js' %}"></script>
+{% endblock %}
