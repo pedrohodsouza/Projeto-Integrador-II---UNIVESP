@@ -3,8 +3,24 @@
    Estrutura compartilhada das páginas internas e navegação básica.
    ========================================================== */
 
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+}
+
 .content-area {
-    max-width: 100%;
+    padding: 1.5rem 0;
+}
+
+.content-area--guest {
+    padding: 0;
+}
+
+.content-area--guest>.container {
+    max-width: none;
+    padding-inline: 0;
 }
 
 .back-link {
@@ -21,8 +37,18 @@
 }
 
 @media (min-width: 768px) {
+    .content-area {
+        padding-block: 4rem;
+    }
+
     .back-link {
         display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding-inline: 1rem;
     }
 }
 
@@ -61,7 +87,7 @@
 }
 
 .page-wide {
-    max-width: 1280px;
+    max-width: 100%;
 }
 
 .page-medium {

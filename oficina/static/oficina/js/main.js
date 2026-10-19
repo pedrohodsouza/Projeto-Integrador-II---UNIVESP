@@ -19,6 +19,66 @@ function updateClock() {
     clockEl.textContent = new Date().toLocaleString('pt-BR');
 }
 
+function closeMenuGroup(menuRoot, selector) {
+    menuRoot.querySelectorAll(selector).forEach((item) => {
+        item.classList.remove('is-open');
+        const button = item.querySelector('.nav-submenu-toggle');
+        if (button) button.setAttribute('aria-expanded', 'false');
+    });
+}
+
+function setupTopNav() {
+    const nav = document.querySelector('[data-topnav]');
+    const toggle = nav ? nav.querySelector('.nav-toggle') : null;
+    const panel = nav ? nav.querySelector('[data-topnav-panel]') : null;
+    if (!nav || !toggle || !panel) return;
+
+    const closePanel = () => {
+        panel.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    const closeSubmenus = () => {
+        closeMenuGroup(nav, '.topnav-item--submenu');
+    };
+
+    toggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const isOpen = panel.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        if (!isOpen) closeSubmenus();
+    });
+
+    nav.querySelectorAll('.nav-submenu-toggle').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const item = button.closest('.topnav-item--submenu');
+            if (!item) return;
+
+            const shouldOpen = !item.classList.contains('is-open');
+            closeSubmenus();
+            if (shouldOpen) {
+                item.classList.add('is-open');
+                button.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!nav.contains(event.target)) {
+            closePanel();
+            closeSubmenus();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closePanel();
+            closeSubmenus();
+        }
+    });
+}
+
 function setupUserMenu() {
     const toggle = document.getElementById('user-menu-toggle');
     const menu = toggle ? toggle.closest('.user-menu') : null;
@@ -49,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
     setInterval(updateGreeting, 60000);
+    setupTopNav();
     setupUserMenu();
 });
 

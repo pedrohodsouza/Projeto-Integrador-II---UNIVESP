@@ -13,11 +13,13 @@
 
 /* ── 2. Componentes Compartilhados ── */
 @import 'components/topbar.css';
+@import 'components/navbar.css';
 @import 'components/dropdown.css';
 @import 'components/alerts.css';
 @import 'components/buttons.css';
 @import 'components/forms.css';
 @import 'components/lists.css';
+@import 'components/icons.css';
 @import 'components/filters.css';
 @import 'components/tables.css';
 @import 'components/combobox.css';

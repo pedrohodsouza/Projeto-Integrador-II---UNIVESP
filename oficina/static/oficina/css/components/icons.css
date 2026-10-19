@@ -1,0 +1,13 @@
+.fa-solid {
+    color: currentColor;
+}
+
+.row-icon > .fa-solid {
+    color: #fff;
+    font-size: 17px;
+}
+
+.home-clock-box > .fa-solid,
+.home-all-clear > .fa-solid {
+    font-size: 18px;
+}

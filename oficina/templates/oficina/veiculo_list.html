@@ -1,5 +1,5 @@
 {% extends "oficina/base.html" %}
-{% load static %}
+{% load static oficina_icons %}
 
 {% block title %}Veículos - Oficina Mecânica{% endblock %}
 
@@ -17,7 +17,7 @@
 
         <div class="group-card">
             <a class="group-row is-link" v-for="veiculo in filtrados" :key="veiculo.id" :href="veiculo.id + '/editar/'">
-                <span class="row-icon row-icon--slate">🚗</span>
+                <span class="row-icon row-icon--slate">{% icono 'veiculos' %}</span>
                 <span class="row-text">
                     <span class="row-title">[[ veiculo.placa ]]</span>
                     <span class="row-subtitle">[[ veiculo.codigo ]] · [[ veiculo.marca ]] [[ veiculo.modelo ]]<template v-if="veiculo.ano"> · [[ veiculo.ano ]]</template></span>

@@ -1,5 +1,5 @@
 {% extends "oficina/base.html" %}
-{% load static %}
+{% load static oficina_icons %}
 
 {% block title %}Atendimentos - Oficina Mecânica{% endblock %}
 
@@ -81,7 +81,7 @@
                     <div class="os-card-placa">[[ a.placa ]]</div>
                     <div class="os-card-linha">[[ a.veiculo ]] · [[ a.cliente ]]</div>
                     <div class="os-card-linha" :title="a.queixa">[[ a.queixa ]]</div>
-                    <div class="os-card-linha">🔧 [[ a.responsavel || 'Sem responsável' ]]</div>
+                    <div class="os-card-linha">{% icono 'mecanico' %} [[ a.responsavel || 'Sem responsável' ]]</div>
                     <div class="os-card-tags">
                         <span class="badge" :class="'badge-prio-' + a.prioridade" v-if="a.prioridade !== 'normal'">[[ a.prioridade_label ]]</span>
                         <span class="badge badge-atraso" v-if="a.atrasado">Atrasado</span>

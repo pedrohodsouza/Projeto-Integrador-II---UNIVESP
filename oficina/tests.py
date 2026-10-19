@@ -2,11 +2,138 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth.models import User
+from django.contrib.staticfiles import finders
+from django.db import connection
+from django.template import Context, Template
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.test.utils import CaptureQueriesContext
 
 from .models import Atendimento, Cliente, Fornecedor, ItemAtendimento, MovimentacaoEstoque, Peca, Veiculo
+
+
+class IconComponentTests(TestCase):
+    def test_icone_conhecido_renderiza_classe_font_awesome_solid(self):
+        template = Template('{% load oficina_icons %}{% icono "inicio" %}')
+
+        self.assertEqual(
+            template.render(Context()).strip(),
+            '<i class="fa-solid fa-house" aria-hidden="true"></i>',
+        )
+
+    def test_icone_desconhecido_nao_renderiza_nada(self):
+        template = Template('{% load oficina_icons %}{% icono "nao-mapeado" %}')
+
+        self.assertEqual(template.render(Context()).strip(), '')
+
+    def test_arquivos_font_awesome_sao_locais(self):
+        self.assertIsNotNone(finders.find(
+            'oficina/vendor/fontawesome-free-7.3.1/css/fontawesome.min.css',
+        ))
+        self.assertIsNotNone(finders.find(
+            'oficina/vendor/fontawesome-free-7.3.1/webfonts/fa-solid-900.woff2',
+        ))
+
+
+class HomeDashboardTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('painel', password='senha-teste')
+        self.client.force_login(self.user)
+
+    def test_home_abre_com_banco_vazio(self):
+        resposta = self.client.get(reverse('home'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertContains(resposta, 'Tudo em dia')
+        self.assertEqual(resposta.context['atendimento_aberto_count'], 0)
+        self.assertEqual(resposta.context['atendimento_atrasado_count'], 0)
+        self.assertEqual(resposta.context['atendimento_aprovacao_count'], 0)
+        self.assertEqual(resposta.context['atendimento_pronto_count'], 0)
+        self.assertEqual(resposta.context['itens_atencao'], [])
+        self.assertEqual(list(resposta.context['atendimentos_recentes']), [])
+        self.assertContains(resposta, 'Nenhum atendimento registrado.')
+        self.assertContains(resposta, 'Novo atendimento')
+
+    def test_home_mostra_indicadores_e_atencoes_com_dados(self):
+        cliente = Cliente.objects.create(nome='Cliente do painel')
+        veiculo = Veiculo.objects.create(
+            cliente=cliente, placa='ABC1D23', marca='Fiat', modelo='Uno',
+        )
+        ontem = timezone.localdate() - timedelta(days=1)
+        Atendimento.objects.create(
+            veiculo=veiculo, queixa='Prazo vencido', previsao_entrega=ontem,
+        )
+        Atendimento.objects.create(
+            veiculo=veiculo,
+            queixa='Urgente',
+            prioridade=Atendimento.Prioridade.URGENTE,
+        )
+        Atendimento.objects.create(
+            veiculo=veiculo,
+            queixa='Aprovar orçamento',
+            status=Atendimento.Status.AGUARDANDO_APROVACAO,
+        )
+        Atendimento.objects.create(
+            veiculo=veiculo, queixa='Pronto', status=Atendimento.Status.PRONTO,
+        )
+        Peca.objects.create(nome='Peça zerada', estoque_atual=0, estoque_minimo=2)
+        Peca.objects.create(nome='Peça baixa', estoque_atual=1, estoque_minimo=2)
+
+        resposta = self.client.get(reverse('home'))
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.context['atendimento_aberto_count'], 4)
+        self.assertEqual(resposta.context['atendimento_atrasado_count'], 1)
+        self.assertEqual(resposta.context['atendimento_aprovacao_count'], 1)
+        self.assertEqual(resposta.context['atendimento_pronto_count'], 1)
+        self.assertLessEqual(len(resposta.context['itens_atencao']), 5)
+        for texto in ['ABC1D23', 'Aguardando aprovação', 'Peça zerada', 'Peça baixa']:
+            self.assertContains(resposta, texto)
+        self.assertContains(resposta, 'Atendimentos recentes')
+        self.assertContains(resposta, 'badge-st-aguardando_aprovacao')
+
+    def test_home_lista_apenas_os_cinco_atendimentos_mais_recentes(self):
+        cliente = Cliente.objects.create(nome='Cliente recente')
+        veiculo = Veiculo.objects.create(
+            cliente=cliente, placa='ABC1D23', marca='Fiat', modelo='Uno',
+        )
+        atendimentos = [
+            Atendimento.objects.create(veiculo=veiculo, queixa=f'Atendimento {indice}')
+            for indice in range(6)
+        ]
+
+        resposta = self.client.get(reverse('home'))
+
+        recentes = list(resposta.context['atendimentos_recentes'])
+        self.assertEqual(len(recentes), 5)
+        self.assertEqual(recentes, list(reversed(atendimentos[-5:])))
+
+    def test_consultas_da_home_nao_crescem_com_a_quantidade_de_itens(self):
+        with CaptureQueriesContext(connection) as consultas_vazias:
+            self.client.get(reverse('home'))
+
+        cliente = Cliente.objects.create(nome='Cliente do painel')
+        veiculo = Veiculo.objects.create(
+            cliente=cliente, placa='ABC1D23', marca='Fiat', modelo='Uno',
+        )
+        Atendimento.objects.bulk_create([
+            Atendimento(
+                veiculo=veiculo,
+                queixa=f'Atendimento {indice}',
+                prioridade=Atendimento.Prioridade.URGENTE,
+            )
+            for indice in range(10)
+        ])
+        Peca.objects.bulk_create([
+            Peca(nome=f'Peça {indice}', estoque_atual=0, estoque_minimo=2)
+            for indice in range(10)
+        ])
+
+        with CaptureQueriesContext(connection) as consultas_com_dados:
+            self.client.get(reverse('home'))
+
+        self.assertEqual(len(consultas_vazias), len(consultas_com_dados))
 
 
 class AtendimentoTests(TestCase):

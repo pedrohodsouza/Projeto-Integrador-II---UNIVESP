@@ -1,0 +1,236 @@
+/* ==========================================================
+   Oficina360 – Componente: Navbar
+   Menu principal da topbar com suporte a desktop e mobile.
+   ========================================================== */
+
+.topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.topnav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.topnav-list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.topnav-item {
+    position: relative;
+}
+
+.topnav-item a,
+.topnav-item button {
+    font-family: inherit;
+}
+
+.topnav-item > a,
+.nav-submenu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0.45rem 0.8rem;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-submenu-toggle {
+    gap: 0.45rem;
+}
+
+.nav-chevron {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.12rem) rotate(45deg);
+    transition: transform 0.15s ease;
+}
+
+.nav-submenu-toggle[aria-expanded="true"] .nav-chevron {
+    transform: translateY(0.1rem) rotate(225deg);
+}
+
+.topnav-item > a:hover,
+.nav-submenu-toggle:hover,
+.topnav-item > a:focus-visible,
+.nav-submenu-toggle:focus-visible,
+.topnav-item > a.is-active,
+.nav-submenu-toggle[aria-expanded="true"] {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    outline: none;
+}
+
+.topnav-item > a.is-active,
+.topnav-item > a[aria-current="page"],
+.nav-submenu-toggle.is-active {
+    color: var(--laranja);
+}
+
+.topnav-item--submenu {
+    position: relative;
+}
+
+.nav-submenu {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    min-width: 180px;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    box-shadow: 0 14px 30px rgba(15, 45, 91, 0.14);
+    display: none;
+    z-index: 25;
+}
+
+.topnav-item--submenu.is-open .nav-submenu {
+    display: block;
+}
+
+.nav-submenu li {
+    list-style: none;
+}
+
+.nav-submenu a {
+    display: block;
+    padding: 0.6rem 0.8rem;
+    border-radius: 7px;
+    color: var(--cor-texto-primario);
+    text-decoration: none;
+    font-size: 0.88rem;
+}
+
+.nav-submenu a:hover,
+.nav-submenu a:focus-visible,
+.nav-submenu a.is-active,
+.nav-submenu a[aria-current="page"] {
+    background: var(--cor-fundo);
+    color: var(--azul-principal);
+    outline: none;
+}
+
+.nav-toggle {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-toggle-bar {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+}
+
+@media (max-width: 767px) {
+    .topbar-inner {
+        min-height: 60px;
+    }
+
+    .topnav {
+        position: static;
+        justify-content: flex-end;
+    }
+
+    .nav-toggle {
+        display: inline-flex;
+    }
+
+    .topnav-panel {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: min(88vw, 320px);
+        height: calc(100vh - 60px);
+        background: var(--cor-fundo-card);
+        box-shadow: 0 12px 28px rgba(15, 45, 91, 0.2);
+        transform: translateX(-102%);
+        transition: transform 0.2s ease;
+        overflow-y: auto;
+        border-right: 1px solid var(--cor-borda);
+    }
+
+    .topnav-panel.is-open {
+        transform: translateX(0);
+    }
+
+    .topnav-list {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        padding: 0.75rem;
+    }
+
+    .topnav-item > a,
+    .nav-submenu-toggle {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 0.8rem 0.9rem;
+        color: var(--cor-texto-primario);
+        background: transparent;
+    }
+
+    .topnav-item > a.is-active,
+    .topnav-item > a[aria-current="page"],
+    .nav-submenu-toggle.is-active {
+        color: var(--laranja);
+        background: var(--cor-fundo);
+    }
+
+    .nav-submenu {
+        position: static;
+        display: none;
+        min-width: 0;
+        margin: 0.25rem 0 0;
+        padding: 0.25rem 0.5rem 0.5rem;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .topnav-item--submenu.is-open .nav-submenu {
+        display: block;
+    }
+
+    .nav-submenu a {
+        padding: 0.7rem 0.8rem;
+        color: var(--cor-texto-primario);
+    }
+}

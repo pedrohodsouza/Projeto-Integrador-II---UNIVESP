@@ -1,5 +1,5 @@
 {% extends "oficina/base.html" %}
-{% load static %}
+{% load static oficina_icons %}
 
 {% block title %}Início - Oficina360{% endblock %}
 
@@ -8,86 +8,118 @@
 {% endblock %}
 
 {% block content %}
-<div class="page home-page">
+<div class="page page-wide home-page">
     <div class="page-title-block home-welcome-block">
         <div class="home-welcome-header">
             <div>
                 <h1 class="home-greeting">
-                    <span id="greeting">Olá</span>{% if user.is_authenticated %}, {{ user.first_name|default:user.get_username }}{% endif %} 👋
+                    <span id="greeting">Olá</span>{% if user.is_authenticated %}, {{ user.first_name|default:user.get_username }}{% endif %}
                 </h1>
                 <p class="home-welcome-subtitle">Painel de controle e acesso rápido</p>
             </div>
-            <div class="home-clock-box">
-                <span class="home-clock-icon" aria-hidden="true">🕒</span>
-                <p id="clock" class="clock"></p>
+            <div class="home-header-tools">
+                <div class="home-actions" aria-label="Ações rápidas">
+                    <a class="home-action" href="{% url 'atendimento_create' %}">
+                        {% icono 'plus' %}
+                        <span>Novo atendimento</span>
+                    </a>
+                    <a class="home-action" href="{% url 'cliente_create' %}">
+                        {% icono 'plus' %}
+                        <span>Novo cliente</span>
+                    </a>
+                    <a class="home-action" href="{% url 'peca_create' %}">
+                        {% icono 'plus' %}
+                        <span>Entrada de peça</span>
+                    </a>
+                </div>
+                <div class="home-clock-box">
+                    {% icono 'relogio' %}
+                    <p id="clock" class="clock"></p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Operação -->
-    <section class="home-section">
-        <h2 class="home-section-title">Operação</h2>
-        <div class="group-card">
-            <a href="{% url 'atendimento_list' %}" class="group-row is-link">
-                <span class="row-icon row-icon--red">🛠️</span>
-                <span class="row-text">
-                    <span class="row-title">Atendimentos</span>
-                    <span class="row-subtitle">
-                        {{ atendimento_aberto_count }} em aberto · {{ atendimento_pronto_count }} pronto{{ atendimento_pronto_count|pluralize }} para retirada{% if atendimento_atrasado_count %} · <span class="home-alert home-alert--danger">⚠️ {{ atendimento_atrasado_count }} atrasado{{ atendimento_atrasado_count|pluralize }}</span>{% endif %}
-                    </span>
-                </span>
-                <span class="chevron">›</span>
-            </a>
-        </div>
+    <section class="home-indicators" aria-label="Indicadores de atendimentos">
+        <a class="home-indicator" href="{% url 'atendimento_list' %}" title="Abrir a listagem de atendimentos">
+            <span class="home-indicator-label">Em aberto</span>
+            <strong class="home-indicator-value">{{ atendimento_aberto_count }}</strong>
+        </a>
+        <a class="home-indicator home-indicator--danger" href="{% url 'atendimento_list' %}" title="Abrir a listagem de atendimentos">
+            <span class="home-indicator-label">Atrasados</span>
+            <strong class="home-indicator-value">{{ atendimento_atrasado_count }}</strong>
+        </a>
+        <a class="home-indicator home-indicator--warning" href="{% url 'atendimento_list' %}" title="Abrir a listagem de atendimentos">
+            <span class="home-indicator-label">Aguardando aprovação</span>
+            <strong class="home-indicator-value">{{ atendimento_aprovacao_count }}</strong>
+        </a>
+        <a class="home-indicator home-indicator--success" href="{% url 'atendimento_list' %}" title="Abrir a listagem de atendimentos">
+            <span class="home-indicator-label">Prontos para retirada</span>
+            <strong class="home-indicator-value">{{ atendimento_pronto_count }}</strong>
+        </a>
     </section>
 
-    <!-- Estoque -->
-    <section class="home-section">
-        <h2 class="home-section-title">Estoque</h2>
-        <div class="group-card">
-            <a href="{% url 'peca_list' %}" class="group-row is-link">
-                <span class="row-icon row-icon--dark">📦</span>
-                <span class="row-text">
-                    <span class="row-title">Estoque de peças</span>
-                    <span class="row-subtitle">
-                        {{ peca_count }} peça{{ peca_count|pluralize }} cadastrada{{ peca_count|pluralize }}{% if peca_baixa_count %} · <span class="home-alert home-alert--warning">⚠️ {{ peca_baixa_count }} para repor</span>{% endif %}
-                    </span>
-                </span>
-                <span class="chevron">›</span>
-            </a>
-            <a href="{% url 'fornecedor_list' %}" class="group-row is-link">
-                <span class="row-icon row-icon--slate">🏭</span>
-                <span class="row-text">
-                    <span class="row-title">Fornecedores</span>
-                    <span class="row-subtitle">{{ fornecedor_count }} cadastrado{{ fornecedor_count|pluralize }}</span>
-                </span>
-                <span class="chevron">›</span>
-            </a>
-        </div>
-    </section>
+    <div class="home-dashboard-grid">
+        <section class="home-section">
+            <div class="home-section-heading">
+                <h2 class="home-section-title">Precisa de atenção</h2>
+            </div>
+            <div class="home-panel">
+                {% if itens_atencao %}
+                <ul class="home-attention-list">
+                    {% for item in itens_atencao %}
+                    <li>
+                        <a class="home-attention-item" href="{{ item.url }}">
+                            <span class="home-attention-copy">
+                                <strong>{{ item.titulo }}</strong>
+                                <small>{{ item.descricao }}</small>
+                            </span>
+                            <span class="badge {{ item.badge_class }}">{{ item.rotulo }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="home-all-clear">
+                    {% icono 'sucesso' %}
+                    <strong>Tudo em dia</strong>
+                    <span>Nenhuma OS atrasada ou peça em falta</span>
+                </div>
+                {% endif %}
+            </div>
+        </section>
 
-    <!-- Cadastros -->
-    <section class="home-section">
-        <h2 class="home-section-title">Cadastros</h2>
-        <div class="group-card">
-            <a href="{% url 'cliente_list' %}" class="group-row is-link">
-                <span class="row-icon row-icon--blue">👤</span>
-                <span class="row-text">
-                    <span class="row-title">Clientes</span>
-                    <span class="row-subtitle">{{ cliente_count }} cadastrado{{ cliente_count|pluralize }}</span>
-                </span>
-                <span class="chevron">›</span>
-            </a>
-            <a href="{% url 'veiculo_list' %}" class="group-row is-link">
-                <span class="row-icon row-icon--slate">🚗</span>
-                <span class="row-text">
-                    <span class="row-title">Veículos</span>
-                    <span class="row-subtitle">{{ veiculo_count }} cadastrado{{ veiculo_count|pluralize }}</span>
-                </span>
-                <span class="chevron">›</span>
-            </a>
-        </div>
-    </section>
+        <section class="home-section">
+            <div class="home-section-heading">
+                <h2 class="home-section-title">Atendimentos recentes</h2>
+                <a class="home-see-all" href="{% url 'atendimento_list' %}">Ver todos</a>
+            </div>
+            <div class="home-panel">
+                {% if atendimentos_recentes %}
+                <ul class="home-recent-list">
+                    {% for atendimento in atendimentos_recentes %}
+                    <li>
+                        <a class="home-recent-item" href="{% url 'atendimento_detail' atendimento.pk %}">
+                            <span class="home-recent-copy">
+                                <strong>{{ atendimento.veiculo.placa }}</strong>
+                                <small>{{ atendimento.veiculo.cliente.nome }} · {{ atendimento.numero }}</small>
+                            </span>
+                            <span class="home-recent-badges">
+                                <span class="badge badge-st-{{ atendimento.status }}">{{ atendimento.get_status_display }}</span>
+                                <span class="badge badge-prio-{{ atendimento.prioridade }}">{{ atendimento.get_prioridade_display }}</span>
+                            </span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="home-recent-empty">
+                    <p>Nenhum atendimento registrado.</p>
+                    <a class="btn" href="{% url 'atendimento_create' %}">Novo atendimento</a>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
 </div>
 {% endblock %}
-
