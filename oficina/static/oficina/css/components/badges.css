@@ -1,0 +1,46 @@
+/* ==========================================================
+   Oficina360 – Componente: Badges e Etiquetas
+   Indicadores de status, prioridade, estoque e movimentações.
+   ========================================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--cor-borda);
+    color: var(--azul-principal);
+    white-space: nowrap;
+    line-height: 1.3;
+}
+
+/* Prioridades de Atendimento */
+.badge-prio-urgente { background: var(--cor-erro-bg); color: var(--cor-erro-texto); }
+.badge-prio-alta { background: #FEF3C7; color: #92400E; }
+.badge-prio-normal { background: #DBEAFE; color: #1E40AF; }
+.badge-prio-baixa { background: #F1F5F9; color: #64748B; }
+.badge-atraso { background: var(--cor-erro-bg); color: var(--cor-erro-texto); }
+
+/* Status do Atendimento */
+.badge-st-aguardando { background: #F1F5F9; color: #334155; }
+.badge-st-diagnostico { background: #E0E7FF; color: #3730A3; }
+.badge-st-aguardando_aprovacao { background: #FEF3C7; color: #92400E; }
+.badge-st-aguardando_pecas { background: #FFEDD5; color: #9A3412; }
+.badge-st-em_execucao { background: #DBEAFE; color: #1E40AF; }
+.badge-st-controle_qualidade { background: #EDE9FE; color: #5B21B6; }
+.badge-st-pronto { background: var(--cor-sucesso-bg); color: var(--cor-sucesso-texto); }
+.badge-st-entregue { background: #E2E8F0; color: #475569; }
+.badge-st-cancelado { background: var(--cor-erro-bg); color: var(--cor-erro-texto); }
+
+/* Situação de Estoque */
+.badge-estoque-ok { background: var(--cor-sucesso-bg); color: var(--cor-sucesso-texto); }
+.badge-estoque-baixo { background: #FEF3C7; color: #92400E; }
+.badge-estoque-zerado { background: var(--cor-erro-bg); color: var(--cor-erro-texto); }
+
+/* Tipos de Movimentação */
+.badge-mov-entrada { background: var(--cor-sucesso-bg); color: var(--cor-sucesso-texto); }
+.badge-mov-saida { background: var(--cor-erro-bg); color: var(--cor-erro-texto); }
+.badge-mov-ajuste { background: #E0E7FF; color: #3730A3; }

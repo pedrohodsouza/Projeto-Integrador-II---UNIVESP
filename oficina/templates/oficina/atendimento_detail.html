@@ -1,6 +1,11 @@
 {% extends "oficina/base.html" %}
+{% load static %}
 
 {% block title %}{{ atendimento.numero }} - Oficina Mecânica{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'oficina/css/pages/atendimentos.css' %}">
+{% endblock %}
 
 {% block content %}
 {% with a=atendimento v=atendimento.veiculo %}

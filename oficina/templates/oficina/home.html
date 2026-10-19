@@ -1,65 +1,93 @@
 {% extends "oficina/base.html" %}
+{% load static %}
 
 {% block title %}Início - Oficina360{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'oficina/css/pages/home.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="page">
-    <div class="page-title-block">
-        <h1>Início</h1>
-        <p id="clock" class="clock"></p>
+<div class="page home-page">
+    <div class="page-title-block home-welcome-block">
+        <div class="home-welcome-header">
+            <div>
+                <h1 class="home-greeting">
+                    <span id="greeting">Olá</span>{% if user.is_authenticated %}, {{ user.first_name|default:user.get_username }}{% endif %} 👋
+                </h1>
+                <p class="home-welcome-subtitle">Painel de controle e acesso rápido</p>
+            </div>
+            <div class="home-clock-box">
+                <span class="home-clock-icon" aria-hidden="true">🕒</span>
+                <p id="clock" class="clock"></p>
+            </div>
+        </div>
     </div>
 
-    <div class="group-card" style="margin-bottom: 1rem;">
-        <a href="{% url 'atendimento_list' %}" class="group-row is-link">
-            <span class="row-icon row-icon--red">🛠️</span>
-            <span class="row-text">
-                <span class="row-title">Atendimentos</span>
-                <span class="row-subtitle">
-                    {{ atendimento_aberto_count }} em aberto · {{ atendimento_pronto_count }} pronto{{ atendimento_pronto_count|pluralize }} para retirada{% if atendimento_atrasado_count %} · {{ atendimento_atrasado_count }} atrasado{{ atendimento_atrasado_count|pluralize }}{% endif %}
+    <!-- Operação -->
+    <section class="home-section">
+        <h2 class="home-section-title">Operação</h2>
+        <div class="group-card">
+            <a href="{% url 'atendimento_list' %}" class="group-row is-link">
+                <span class="row-icon row-icon--red">🛠️</span>
+                <span class="row-text">
+                    <span class="row-title">Atendimentos</span>
+                    <span class="row-subtitle">
+                        {{ atendimento_aberto_count }} em aberto · {{ atendimento_pronto_count }} pronto{{ atendimento_pronto_count|pluralize }} para retirada{% if atendimento_atrasado_count %} · <span class="home-alert home-alert--danger">⚠️ {{ atendimento_atrasado_count }} atrasado{{ atendimento_atrasado_count|pluralize }}</span>{% endif %}
+                    </span>
                 </span>
-            </span>
-            <span class="chevron">›</span>
-        </a>
-    </div>
+                <span class="chevron">›</span>
+            </a>
+        </div>
+    </section>
 
-    <div class="group-card" style="margin-bottom: 1rem;">
-        <a href="{% url 'peca_list' %}" class="group-row is-link">
-            <span class="row-icon row-icon--dark">📦</span>
-            <span class="row-text">
-                <span class="row-title">Estoque de peças</span>
-                <span class="row-subtitle">
-                    {{ peca_count }} peça{{ peca_count|pluralize }} cadastrada{{ peca_count|pluralize }}{% if peca_baixa_count %} · {{ peca_baixa_count }} para repor{% endif %}
+    <!-- Estoque -->
+    <section class="home-section">
+        <h2 class="home-section-title">Estoque</h2>
+        <div class="group-card">
+            <a href="{% url 'peca_list' %}" class="group-row is-link">
+                <span class="row-icon row-icon--dark">📦</span>
+                <span class="row-text">
+                    <span class="row-title">Estoque de peças</span>
+                    <span class="row-subtitle">
+                        {{ peca_count }} peça{{ peca_count|pluralize }} cadastrada{{ peca_count|pluralize }}{% if peca_baixa_count %} · <span class="home-alert home-alert--warning">⚠️ {{ peca_baixa_count }} para repor</span>{% endif %}
+                    </span>
                 </span>
-            </span>
-            <span class="chevron">›</span>
-        </a>
-        <a href="{% url 'fornecedor_list' %}" class="group-row is-link">
-            <span class="row-icon row-icon--slate">🏭</span>
-            <span class="row-text">
-                <span class="row-title">Fornecedores</span>
-                <span class="row-subtitle">{{ fornecedor_count }} cadastrado{{ fornecedor_count|pluralize }}</span>
-            </span>
-            <span class="chevron">›</span>
-        </a>
-    </div>
+                <span class="chevron">›</span>
+            </a>
+            <a href="{% url 'fornecedor_list' %}" class="group-row is-link">
+                <span class="row-icon row-icon--slate">🏭</span>
+                <span class="row-text">
+                    <span class="row-title">Fornecedores</span>
+                    <span class="row-subtitle">{{ fornecedor_count }} cadastrado{{ fornecedor_count|pluralize }}</span>
+                </span>
+                <span class="chevron">›</span>
+            </a>
+        </div>
+    </section>
 
-    <div class="group-card">
-        <a href="{% url 'cliente_list' %}" class="group-row is-link">
-            <span class="row-icon row-icon--blue">👤</span>
-            <span class="row-text">
-                <span class="row-title">Clientes</span>
-                <span class="row-subtitle">{{ cliente_count }} cadastrado{{ cliente_count|pluralize }}</span>
-            </span>
-            <span class="chevron">›</span>
-        </a>
-        <a href="{% url 'veiculo_list' %}" class="group-row is-link">
-            <span class="row-icon row-icon--slate">🚗</span>
-            <span class="row-text">
-                <span class="row-title">Veículos</span>
-                <span class="row-subtitle">{{ veiculo_count }} cadastrado{{ veiculo_count|pluralize }}</span>
-            </span>
-            <span class="chevron">›</span>
-        </a>
-    </div>
+    <!-- Cadastros -->
+    <section class="home-section">
+        <h2 class="home-section-title">Cadastros</h2>
+        <div class="group-card">
+            <a href="{% url 'cliente_list' %}" class="group-row is-link">
+                <span class="row-icon row-icon--blue">👤</span>
+                <span class="row-text">
+                    <span class="row-title">Clientes</span>
+                    <span class="row-subtitle">{{ cliente_count }} cadastrado{{ cliente_count|pluralize }}</span>
+                </span>
+                <span class="chevron">›</span>
+            </a>
+            <a href="{% url 'veiculo_list' %}" class="group-row is-link">
+                <span class="row-icon row-icon--slate">🚗</span>
+                <span class="row-text">
+                    <span class="row-title">Veículos</span>
+                    <span class="row-subtitle">{{ veiculo_count }} cadastrado{{ veiculo_count|pluralize }}</span>
+                </span>
+                <span class="chevron">›</span>
+            </a>
+        </div>
+    </section>
 </div>
 {% endblock %}
+

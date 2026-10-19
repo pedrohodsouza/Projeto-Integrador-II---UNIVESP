@@ -1,0 +1,190 @@
+/* ==========================================================
+   Oficina360 – Componente: Painéis, Detalhes e Linha do Tempo
+   Layouts de visão detalhada (.detail-grid, .panel, .timeline).
+   ========================================================== */
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.panel {
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    padding: 1.25rem 1.35rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 4px rgba(15, 45, 91, 0.05);
+}
+
+.panel h2 {
+    font-size: 1.05rem;
+    margin: 0 0 1rem;
+    color: var(--azul-principal);
+}
+
+.panel .table-wrap {
+    border: none;
+    margin: 0 -1.35rem;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.panel.form-card {
+    padding: 1.25rem 1.35rem;
+}
+
+.panel.form-card p {
+    margin-bottom: 0.75rem;
+}
+
+/* Lista de Informações / Metadados */
+.info-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+    margin: 0;
+}
+
+.info-list dt {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--cor-texto-secundario);
+}
+
+.info-list dd {
+    margin: 0.15rem 0 0;
+    font-weight: 500;
+    color: var(--cor-texto-primario);
+}
+
+.info-list dd.destaque {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--azul-principal);
+}
+
+.texto-livre {
+    white-space: pre-line;
+    margin: 0 0 0.75rem;
+    color: var(--cor-texto-primario);
+    line-height: 1.5;
+}
+
+/* Barra de Etapas do Atendimento */
+.etapas {
+    display: flex;
+    gap: 0.35rem;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.etapa {
+    flex: 1;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--cor-borda);
+    transition: background-color 0.2s ease;
+}
+
+.etapa.is-done {
+    background: var(--azul-tecnologia);
+}
+
+.etapa.is-current {
+    background: var(--laranja);
+}
+
+/* Linha do Tempo / Histórico */
+.timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.35rem;
+}
+
+.timeline li {
+    position: relative;
+    padding: 0 0 1rem 1.25rem;
+    border-left: 2px solid var(--cor-borda);
+}
+
+.timeline li::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 0.25rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--azul-tecnologia);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--azul-tecnologia);
+}
+
+.timeline li:last-child {
+    border-left-color: transparent;
+    padding-bottom: 0;
+}
+
+/* Formulário com erros */
+.form-erros ul {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--cor-erro-texto);
+}
+
+.form-card .campo-com-erro label {
+    color: var(--cor-erro-texto);
+}
+
+.form-card .campo-com-erro input,
+.form-card .campo-com-erro select,
+.form-card .campo-com-erro textarea {
+    border-color: var(--cor-erro);
+    background: var(--cor-erro-bg);
+}
+
+/* Zona de Exclusão */
+.zona-exclusao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px dashed #FCA5A5;
+    background: #FEF2F2;
+    border-radius: 12px;
+}
+
+.btn-secondary.btn-perigo {
+    color: var(--cor-erro);
+    border-color: #FCA5A5;
+}
+
+.btn-secondary.btn-perigo:hover {
+    background: var(--cor-erro-bg);
+    color: var(--cor-erro-texto);
+    border-color: var(--cor-erro);
+}
+
+@media (max-width: 860px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .info-list {
+        grid-template-columns: 1fr;
+    }
+
+    .zona-exclusao {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}

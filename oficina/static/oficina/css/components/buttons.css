@@ -40,3 +40,24 @@
     border-color: var(--azul-principal);
     box-shadow: none;
 }
+
+.btn-link-danger {
+    background: none;
+    border: none;
+    color: var(--cor-erro);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: 0.85rem;
+    padding: 0.4rem;
+    text-decoration: underline;
+}
+
+.btn-link-danger:hover {
+    color: var(--cor-erro-texto);
+}
+
+.btn-block {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}

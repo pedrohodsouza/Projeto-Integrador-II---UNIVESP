@@ -3,6 +3,162 @@
    Estilos específicos do painel inicial.
    ========================================================== */
 
-.page-title-block {
-    margin-bottom: 1.5rem;
+/* ── Estrutura e Espaçamento da Página ── */
+
+.home-page {
+    padding: 1.75rem 1rem 3rem;
+}
+
+/* ── Cabeçalho de Boas-Vindas ── */
+
+.home-welcome-block {
+    margin-bottom: 1.75rem;
+}
+
+.page:not(.home-page) .home-welcome-block {
+    margin-top: 1.75rem;
+}
+
+.home-welcome-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.home-greeting {
+    margin: 0 !important;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--azul-principal);
+    line-height: 1.2;
+}
+
+.home-welcome-subtitle {
+    margin: 0.35rem 0 0;
+    font-size: 0.875rem;
+    color: var(--cor-texto-secundario);
+}
+
+.home-clock-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 999px;
+    box-shadow: 0 1px 3px rgba(15, 45, 91, 0.05);
+}
+
+.home-clock-icon {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.home-clock-box .clock {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
+    white-space: nowrap;
+}
+
+/* ── Seções & Títulos dos Grupos ── */
+
+.home-section {
+    margin-bottom: 1.35rem;
+}
+
+.home-section:last-child {
+    margin-bottom: 0;
+}
+
+.home-section-title {
+    font-family: var(--font-titulo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cor-texto-secundario);
+    margin: 0 0 0.5rem 0.5rem;
+}
+
+/* ── Destaques de Alerta nos Subtítulos ── */
+
+.home-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 6px;
+    vertical-align: middle;
+}
+
+.home-alert--danger {
+    background: var(--cor-erro-bg);
+    color: var(--cor-erro-texto);
+}
+
+.home-alert--warning {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+/* ── Hover sutil e interatividade nos cards ── */
+
+.home-section .group-card {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-section .group-card:hover {
+    box-shadow: 0 4px 14px rgba(15, 45, 91, 0.08);
+}
+
+.home-section .group-row.is-link {
+    transition: background-color 0.15s ease;
+}
+
+.home-section .group-row.is-link .chevron {
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.home-section .group-row.is-link:hover .chevron {
+    color: var(--azul-tecnologia);
+    transform: translateX(3px);
+}
+
+/* ── Responsividade Mobile ── */
+
+@media (max-width: 640px) {
+    .home-page {
+        padding: 1.25rem 1rem 2.5rem;
+    }
+
+    .home-welcome-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+    }
+
+    .home-clock-box {
+        align-self: flex-start;
+        padding: 0.35rem 0.7rem;
+    }
+
+    .home-section .row-subtitle {
+        white-space: normal;
+        line-height: 1.45;
+        margin-top: 0.2rem;
+    }
+
+    .home-section .group-row {
+        padding: 0.85rem 0.9rem;
+    }
 }

@@ -1,3 +1,18 @@
+function updateGreeting() {
+    const greetingEl = document.getElementById('greeting');
+    if (!greetingEl) return;
+    const hour = new Date().getHours();
+    let greeting = 'Olá';
+    if (hour >= 5 && hour < 12) {
+        greeting = 'Bom dia';
+    } else if (hour >= 12 && hour < 18) {
+        greeting = 'Boa tarde';
+    } else {
+        greeting = 'Boa noite';
+    }
+    greetingEl.textContent = greeting;
+}
+
 function updateClock() {
     const clockEl = document.getElementById('clock');
     if (!clockEl) return;
@@ -30,8 +45,10 @@ function setupUserMenu() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateGreeting();
     updateClock();
     setInterval(updateClock, 1000);
+    setInterval(updateGreeting, 60000);
     setupUserMenu();
 });
 

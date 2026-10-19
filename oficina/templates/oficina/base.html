@@ -9,20 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{% static 'oficina/img/favicon.png' %}">
-    <!-- Base & Design System -->
-    <link rel="stylesheet" href="{% static 'oficina/css/base/variables.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/base/reset.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/base/typography.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/base/layout.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/base/animations.css' %}">
-
-    <!-- Componentes Compartilhados -->
-    <link rel="stylesheet" href="{% static 'oficina/css/components/topbar.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/components/dropdown.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/components/alerts.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/components/buttons.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/components/forms.css' %}">
-    <link rel="stylesheet" href="{% static 'oficina/css/components/lists.css' %}">
+    <!-- Estilos globais: base e componentes compartilhados -->
+    <link rel="stylesheet" href="{% static 'oficina/css/style.css' %}">
 
     <!-- Estilos específicos da página -->
     {% block extra_css %}{% endblock %}

@@ -1,7 +1,7 @@
 /* ==========================================================
    Oficina360 – Orquestrador Principal de Estilos
-   Importa módulos em ordem estrita de cascata:
-   Base -> Componentes -> Páginas
+   Importa módulos globais em ordem estrita de cascata:
+   Base -> Componentes. Os estilos de página são carregados pelos templates.
    ========================================================== */
 
 /* ── 1. Base & Design System ── */
@@ -18,7 +18,8 @@
 @import 'components/buttons.css';
 @import 'components/forms.css';
 @import 'components/lists.css';
-
-/* ── 3. Páginas ── */
-@import 'pages/home.css';
-@import 'pages/login.css';
+@import 'components/filters.css';
+@import 'components/tables.css';
+@import 'components/combobox.css';
+@import 'components/badges.css';
+@import 'components/panels.css';

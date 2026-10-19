@@ -38,4 +38,11 @@
     /* Tipografia */
     --font-titulo: 'Montserrat', 'Inter', system-ui, sans-serif;
     --font-base: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    /* Aliases legados para compatibilidade */
+    --cor-primaria: var(--azul-principal);
+    --cor-primaria-escura: var(--azul-ardosia);
+    --cor-destaque: var(--cor-erro);
+    --cor-destaque-escura: var(--cor-erro-texto);
+    --cor-fundo-secundario: var(--cor-borda);
 }

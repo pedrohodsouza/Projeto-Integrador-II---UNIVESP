@@ -59,3 +59,50 @@
 .page-title-block {
     margin-bottom: 1.5rem;
 }
+
+.page-wide {
+    max-width: 1280px;
+}
+
+.page-medium {
+    max-width: 960px;
+}
+
+/* Busca reativa (Vue.js) */
+.search-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1.5px solid var(--cor-borda);
+    background: #fff;
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-size: 0.95rem;
+    color: var(--cor-texto-primario);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--azul-tecnologia);
+    box-shadow: 0 0 0 3px var(--azul-tecnologia-foco);
+}
+
+.search-count {
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+    margin: -0.5rem 0 0.75rem;
+}
+
+.search-count a {
+    color: var(--azul-tecnologia);
+    text-decoration: none;
+}
+
+.search-count a:hover {
+    text-decoration: underline;
+}
+
+[v-cloak] {
+    display: none;
+}
