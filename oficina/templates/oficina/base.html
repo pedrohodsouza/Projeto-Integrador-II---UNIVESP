@@ -57,7 +57,7 @@
     </header>
     {% endif %}
 
-    <div class="content-area{% if not user.is_authenticated %} content-area--guest{% endif %}">
+    <div class="content-area{% if not user.is_authenticated %} content-area--guest{% endif %}{% if request.resolver_match.url_name == 'login' %} content-area--login{% endif %}">
         <div class="container">
             {% if user.is_authenticated and request.resolver_match.url_name != 'home' %}
                 <a href="{% url 'home' %}" class="back-link">{% icono 'inicio' %} Início</a>

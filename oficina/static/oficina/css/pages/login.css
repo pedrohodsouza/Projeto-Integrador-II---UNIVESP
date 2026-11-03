@@ -10,6 +10,10 @@
     min-height: 100vh;
 }
 
+.content-area--login {
+    padding-block: 0;
+}
+
 /* Oculta as mensagens do base.html na página de login (exibidas dentro do formulário) */
 .content-area--guest > .messages {
     display: none;
