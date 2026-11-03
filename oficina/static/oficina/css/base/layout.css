@@ -1,0 +1,134 @@
+/* ==========================================================
+   Oficina360 – Base: Layout
+   Estrutura compartilhada das páginas internas e navegação básica.
+   ========================================================== */
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+}
+
+.content-area {
+    padding: 1.5rem 0;
+}
+
+.content-area--guest {
+    padding: 0;
+}
+
+.content-area--guest>.container {
+    max-width: none;
+    padding-inline: 0;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--azul-tecnologia);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+    .content-area {
+        padding-block: 4rem;
+    }
+
+    .back-link {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding-inline: 1rem;
+    }
+}
+
+.page {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.page-narrow {
+    max-width: 420px;
+}
+
+.page h1 {
+    font-family: var(--font-titulo);
+    font-size: 1.4rem;
+    margin: 0 0 1.5rem;
+    color: var(--azul-principal);
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+.page-title-block {
+    margin-bottom: 1.5rem;
+}
+
+.page-wide {
+    max-width: 100%;
+}
+
+.page-medium {
+    max-width: 960px;
+}
+
+/* Busca reativa (Vue.js) */
+.search-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1.5px solid var(--cor-borda);
+    background: #fff;
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-size: 0.95rem;
+    color: var(--cor-texto-primario);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--azul-tecnologia);
+    box-shadow: 0 0 0 3px var(--azul-tecnologia-foco);
+}
+
+.search-count {
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+    margin: -0.5rem 0 0.75rem;
+}
+
+.search-count a {
+    color: var(--azul-tecnologia);
+    text-decoration: none;
+}
+
+.search-count a:hover {
+    text-decoration: underline;
+}
+
+[v-cloak] {
+    display: none;
+}

@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Count, F
+from django.db.models import Count, F, Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
@@ -41,18 +42,129 @@ def logout_view(request):
 
 @login_required
 def home_view(request):
+    hoje = timezone.localdate()
+    contagens_atendimento = Atendimento.objects.aggregate(
+        abertos=Count('pk', filter=~Q(status__in=Atendimento.STATUS_FINAIS)),
+        atrasados=Count(
+            'pk',
+            filter=(
+                ~Q(status__in=Atendimento.STATUS_FINAIS)
+                & ~Q(status=Atendimento.Status.PRONTO)
+                & Q(previsao_entrega__lt=hoje)
+            ),
+        ),
+        aguardando_aprovacao=Count(
+            'pk', filter=Q(status=Atendimento.Status.AGUARDANDO_APROVACAO),
+        ),
+        prontos=Count('pk', filter=Q(status=Atendimento.Status.PRONTO)),
+    )
+    contagens_peca = Peca.objects.filter(ativo=True).aggregate(
+        cadastradas=Count('pk'),
+        baixa=Count('pk', filter=Q(estoque_atual__lte=F('estoque_minimo'))),
+    )
+
     abertos = Atendimento.objects.exclude(status__in=Atendimento.STATUS_FINAIS)
+    itens_atencao = []
+    atendimentos_atencao = {}
+
+    atrasados = abertos.filter(
+        previsao_entrega__lt=hoje,
+    ).exclude(status=Atendimento.Status.PRONTO).select_related('veiculo__cliente').order_by(
+        'previsao_entrega', '-data_entrada',
+    )[:5]
+    urgentes = abertos.filter(
+        prioridade=Atendimento.Prioridade.URGENTE,
+    ).select_related('veiculo__cliente').order_by('-data_entrada')[:5]
+    for atendimento in list(atrasados) + list(urgentes):
+        atrasado = atendimento.atrasado
+        ordem = 0 if atrasado and atendimento.prioridade == Atendimento.Prioridade.URGENTE else (
+            1 if atrasado else 2
+        )
+        atendimentos_atencao[atendimento.pk] = (
+            ordem,
+            atendimento.previsao_entrega or hoje,
+            atendimento,
+        )
+
+    for ordem, _, atendimento in atendimentos_atencao.values():
+        if atendimento.atrasado:
+            rotulo = 'OS atrasada'
+            badge_class = 'badge-atraso'
+        else:
+            rotulo = 'OS urgente'
+            badge_class = 'badge-prio-urgente'
+        itens_atencao.append({
+            'ordem': ordem,
+            'data_ordem': atendimento.previsao_entrega or hoje,
+            'titulo': f'{atendimento.numero} · {atendimento.veiculo.placa}',
+            'descricao': f'{atendimento.veiculo.cliente.nome} · {atendimento.get_status_display()}',
+            'rotulo': rotulo,
+            'badge_class': badge_class,
+            'url': reverse('atendimento_detail', args=[atendimento.pk]),
+        })
+
+    aguardando_aprovacao = abertos.filter(
+        status=Atendimento.Status.AGUARDANDO_APROVACAO,
+    ).select_related('veiculo__cliente').order_by('previsao_entrega', '-data_entrada')[:5]
+    for atendimento in aguardando_aprovacao:
+        itens_atencao.append({
+            'ordem': 3,
+            'data_ordem': atendimento.previsao_entrega or hoje,
+            'titulo': f'{atendimento.numero} · {atendimento.veiculo.placa}',
+            'descricao': atendimento.veiculo.cliente.nome,
+            'rotulo': 'Aguardando aprovação',
+            'badge_class': 'badge-st-aguardando_aprovacao',
+            'url': reverse('atendimento_detail', args=[atendimento.pk]),
+        })
+
+    pecas_zeradas = Peca.objects.filter(
+        ativo=True, estoque_atual__lte=0,
+    ).order_by('nome')[:5]
+    for peca in pecas_zeradas:
+        itens_atencao.append({
+            'ordem': 4,
+            'data_ordem': hoje,
+            'titulo': peca.nome,
+            'descricao': f'Estoque: {peca.estoque_atual:g} · mínimo: {peca.estoque_minimo:g}',
+            'rotulo': 'Estoque zerado',
+            'badge_class': 'badge-estoque-zerado',
+            'url': reverse('peca_detail', args=[peca.pk]),
+        })
+
+    pecas_baixas = Peca.objects.filter(
+        ativo=True,
+        estoque_atual__gt=0,
+        estoque_atual__lte=F('estoque_minimo'),
+    ).order_by('estoque_atual', 'nome')[:5]
+    for peca in pecas_baixas:
+        itens_atencao.append({
+            'ordem': 5,
+            'data_ordem': hoje,
+            'titulo': peca.nome,
+            'descricao': f'Estoque: {peca.estoque_atual:g} · mínimo: {peca.estoque_minimo:g}',
+            'rotulo': 'Estoque baixo',
+            'badge_class': 'badge-estoque-baixo',
+            'url': reverse('peca_detail', args=[peca.pk]),
+        })
+
+    itens_atencao = sorted(
+        itens_atencao, key=lambda item: (item['ordem'], item['data_ordem'], item['titulo']),
+    )[:5]
+    atendimentos_recentes = Atendimento.objects.select_related(
+        'veiculo__cliente',
+    ).order_by('-data_entrada', '-pk')[:5]
     context = {
         'cliente_count': Cliente.objects.count(),
         'veiculo_count': Veiculo.objects.count(),
-        'atendimento_aberto_count': abertos.count(),
-        'atendimento_pronto_count': abertos.filter(status=Atendimento.Status.PRONTO).count(),
-        'atendimento_atrasado_count': abertos.exclude(status=Atendimento.Status.PRONTO).filter(
-            previsao_entrega__lt=timezone.localdate()
-        ).count(),
-        'peca_count': Peca.objects.filter(ativo=True).count(),
-        'peca_baixa_count': Peca.objects.filter(ativo=True, estoque_atual__lte=F('estoque_minimo')).count(),
+        'atendimento_aberto_count': contagens_atendimento['abertos'],
+        'atendimento_pronto_count': contagens_atendimento['prontos'],
+        'atendimento_atrasado_count': contagens_atendimento['atrasados'],
+        'atendimento_aprovacao_count': contagens_atendimento['aguardando_aprovacao'],
+        'peca_count': contagens_peca['cadastradas'],
+        'peca_baixa_count': contagens_peca['baixa'],
         'fornecedor_count': Fornecedor.objects.count(),
+        'itens_atencao': itens_atencao,
+        'atendimentos_recentes': atendimentos_recentes,
     }
     return render(request, 'oficina/home.html', context)
 

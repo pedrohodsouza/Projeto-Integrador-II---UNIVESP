@@ -1,0 +1,69 @@
+/* ==========================================================
+   Oficina360 – Componente: Tabelas
+   Tabelas de dados responsivas, linhas clicáveis e numéricos.
+   ========================================================== */
+
+.table-wrap {
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 1px 4px rgba(15, 45, 91, 0.05);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+    text-align: left;
+    padding: 0.75rem 0.95rem;
+    border-bottom: 1px solid var(--cor-borda);
+    vertical-align: middle;
+}
+
+.table th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    color: var(--cor-texto-secundario);
+    background: var(--cor-fundo);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr.is-link {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.table tr.is-link:hover td {
+    background: var(--cor-fundo);
+}
+
+.table .num {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.table tfoot td {
+    font-weight: 600;
+    background: var(--cor-fundo);
+    border-top: 2px solid var(--cor-borda);
+}
+
+.table tr.is-inativo td {
+    opacity: 0.55;
+}
+
+.muted {
+    color: var(--cor-texto-secundario);
+    font-size: 0.85rem;
+}

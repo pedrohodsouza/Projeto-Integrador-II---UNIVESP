@@ -1,0 +1,146 @@
+/* ==========================================================
+   Oficina360 – Componente: Filtros e indicadores
+   ========================================================== */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.stat {
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    text-align: left;
+    font-family: var(--font-base);
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 0 1px 3px rgba(15, 45, 91, 0.04);
+}
+
+.stat:hover {
+    box-shadow: 0 3px 8px rgba(15, 45, 91, 0.08);
+}
+
+.stat.is-active {
+    border-color: var(--azul-tecnologia);
+    box-shadow: 0 0 0 3px var(--azul-tecnologia-foco);
+}
+
+.stat-valor {
+    display: block;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--azul-principal);
+    line-height: 1.2;
+}
+
+.stat-rotulo {
+    font-size: 0.825rem;
+    color: var(--cor-texto-secundario);
+    margin-top: 0.2rem;
+}
+
+.stat--alerta .stat-valor {
+    color: var(--cor-erro);
+}
+
+.stat--ok .stat-valor {
+    color: var(--cor-sucesso);
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.toolbar .search-input {
+    flex: 1 1 260px;
+    margin: 0;
+    width: auto;
+}
+
+.toolbar select {
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid var(--cor-borda);
+    border-radius: 8px;
+    background: var(--cor-fundo-card);
+    font-family: var(--font-base);
+    font-size: 0.95rem;
+    color: var(--cor-texto-primario);
+}
+
+.toolbar label.check {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+    cursor: pointer;
+}
+
+.segmented {
+    display: inline-flex;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--cor-fundo-card);
+}
+
+.segmented button {
+    border: none;
+    background: transparent;
+    padding: 0.55rem 0.95rem;
+    font-family: var(--font-base);
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--cor-texto-secundario);
+    font-weight: 500;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.segmented button.is-active,
+.segmented-link.is-active {
+    background: var(--azul-principal);
+    color: #fff;
+    font-weight: 600;
+}
+
+.segmented-link {
+    display: inline-block;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.segmented-link:hover {
+    background: var(--cor-fundo);
+    color: var(--azul-principal);
+}
+
+@media (max-width: 640px) {
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar select,
+    .toolbar .segmented {
+        width: 100%;
+    }
+
+    .toolbar .segmented button {
+        flex: 1;
+        text-align: center;
+    }
+}

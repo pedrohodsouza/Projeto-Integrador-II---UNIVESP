@@ -1,0 +1,48 @@
+/* ==========================================================
+   Oficina360 – Base: Variáveis e Tokens de Design
+   Cores do tema, tipografia, espaçamentos e sombras do sistema.
+   ========================================================== */
+
+:root {
+    /* Cores da Marca */
+    --azul-principal: #0F2D5B;
+    --azul-gradiente-meio: #1a3d70;
+    --azul-gradiente-profundo: #14407f;
+    --azul-ardosia: #1E3A5F;
+    --azul-tecnologia: #2563EB;
+    --azul-tecnologia-hover: #1d4ed8;
+    --azul-tecnologia-foco: rgba(37, 99, 235, 0.15);
+    --laranja: #F59E0B;
+
+    /* Fundos & Bordas */
+    --cor-fundo: #F3F4F6;
+    --cor-fundo-card: #ffffff;
+    --cor-borda: #E5E7EB;
+
+    /* Textos */
+    --cor-texto-primario: #0F2D5B;
+    --cor-texto-secundario: #6B7280;
+    --cor-texto-suave: #9CA3AF;
+
+    /* Semântica (Alerts e Feedback) */
+    --cor-erro: #DC2626;
+    --cor-erro-bg: #FEE2E2;
+    --cor-erro-texto: #991B1B;
+    --cor-sucesso: #16A34A;
+    --cor-sucesso-bg: #DCFCE7;
+    --cor-sucesso-texto: #166534;
+
+    /* Destaque / Accent */
+    --cor-accent: var(--azul-tecnologia);
+
+    /* Tipografia */
+    --font-titulo: 'Montserrat', 'Inter', system-ui, sans-serif;
+    --font-base: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    /* Aliases legados para compatibilidade */
+    --cor-primaria: var(--azul-principal);
+    --cor-primaria-escura: var(--azul-ardosia);
+    --cor-destaque: var(--cor-erro);
+    --cor-destaque-escura: var(--cor-erro-texto);
+    --cor-fundo-secundario: var(--cor-borda);
+}

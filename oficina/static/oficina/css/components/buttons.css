@@ -1,0 +1,63 @@
+/* ==========================================================
+   Oficina360 – Componente: Botões
+   Botões de ação primária e secundária.
+   ========================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1.1rem;
+    background: var(--azul-tecnologia);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.btn:hover {
+    background: var(--azul-tecnologia-hover);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--cor-texto-secundario);
+    border: 1px solid var(--cor-borda);
+    font-weight: 500;
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background: var(--cor-fundo);
+    color: var(--azul-principal);
+    border-color: var(--azul-principal);
+    box-shadow: none;
+}
+
+.btn-link-danger {
+    background: none;
+    border: none;
+    color: var(--cor-erro);
+    cursor: pointer;
+    font-family: var(--font-base);
+    font-size: 0.85rem;
+    padding: 0.4rem;
+    text-decoration: underline;
+}
+
+.btn-link-danger:hover {
+    color: var(--cor-erro-texto);
+}
+
+.btn-block {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}

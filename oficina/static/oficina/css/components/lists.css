@@ -1,0 +1,115 @@
+/* ==========================================================
+   Oficina360 – Componente: Listagens Agrupadas
+   Cartões de listagem (.group-card), linhas, ícones temáticos e avatares.
+   ========================================================== */
+
+.group-card {
+    background: var(--cor-fundo-card);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--cor-borda);
+    box-shadow: 0 1px 4px rgba(15, 45, 91, 0.06);
+}
+
+.group-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: var(--cor-texto-primario);
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.group-card .group-row:last-child {
+    border-bottom: none;
+}
+
+a.group-row.is-link:hover,
+a.group-row.is-link:active {
+    background: var(--cor-fundo);
+}
+
+.group-row--empty {
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.row-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.row-icon--blue {
+    background: var(--azul-tecnologia);
+}
+
+.row-icon--slate {
+    background: var(--azul-principal);
+}
+
+.row-icon--dark {
+    background: var(--azul-ardosia);
+}
+
+.row-icon--red {
+    background: var(--laranja);
+}
+
+.row-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--azul-tecnologia);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.row-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.row-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--cor-texto-primario);
+}
+
+.row-subtitle {
+    font-size: 0.8rem;
+    color: var(--cor-texto-secundario);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.row-trailing {
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+    text-align: right;
+    flex-shrink: 0;
+    max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chevron {
+    color: var(--cor-texto-suave);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}

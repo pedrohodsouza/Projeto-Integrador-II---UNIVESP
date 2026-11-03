@@ -1,0 +1,19 @@
+/* ==========================================================
+   Oficina360 – Página: Estoque
+   Estilos específicos do painel de peças e movimentações.
+   ========================================================== */
+
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+}
+
+.header-actions form {
+    margin: 0;
+}
+
+.stat--aviso .stat-valor {
+    color: #B45309;
+}

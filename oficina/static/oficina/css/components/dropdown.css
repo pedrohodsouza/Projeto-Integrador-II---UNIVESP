@@ -1,0 +1,74 @@
+/* ==========================================================
+   Oficina360 – Componente: Dropdown
+   Menu suspenso de perfil do usuário e opções de conta.
+   ========================================================== */
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.user-menu-toggle:focus-visible {
+    outline: 2px solid var(--laranja);
+    outline-offset: 2px;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    width: 220px;
+    background: var(--cor-fundo-card);
+    border-radius: 12px;
+    border: 1px solid var(--cor-borda);
+    box-shadow: 0 12px 28px rgba(15, 45, 91, 0.16);
+    overflow: hidden;
+}
+
+.user-menu.is-open .user-dropdown {
+    display: block;
+}
+
+.dropdown-account {
+    display: flex;
+    flex-direction: column;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 1rem;
+    text-decoration: none;
+    color: var(--cor-texto-primario);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+    background: var(--cor-fundo);
+}
+
+.dropdown-item.is-danger {
+    color: var(--cor-erro);
+}
+
+.dropdown-item .row-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 0.85rem;
+    border-radius: 7px;
+}

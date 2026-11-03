@@ -1,6 +1,11 @@
 {% extends "oficina/base.html" %}
+{% load static %}
 
 {% block title %}{% if atendimento %}Editar {{ atendimento.numero }}{% else %}Novo atendimento{% endif %} - Oficina Mecânica{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'oficina/css/pages/atendimentos.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="page">

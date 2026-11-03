@@ -1,4 +1,5 @@
 {% extends "oficina/base.html" %}
+{% load oficina_icons %}
 
 {% block title %}Usuários - Oficina Mecânica{% endblock %}
 
@@ -12,7 +13,7 @@
     <div class="group-card">
         {% for usuario in usuarios %}
         <a class="group-row is-link" href="{% url 'usuario_edit' usuario.pk %}">
-            <span class="row-icon row-icon--dark">⚙️</span>
+            <span class="row-icon row-icon--dark">{% icono 'usuarios' %}</span>
             <span class="row-text">
                 <span class="row-title">{{ usuario.username }}</span>
                 <span class="row-subtitle">{{ usuario.first_name|default:usuario.email|default:"Sem dados adicionais" }}</span>

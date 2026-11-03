@@ -1,5 +1,5 @@
 {% extends "oficina/base.html" %}
-{% load static %}
+{% load static oficina_icons %}
 
 {% block title %}Fornecedores - Oficina Mecânica{% endblock %}
 
@@ -17,7 +17,7 @@
 
         <div class="group-card">
             <a class="group-row is-link" v-for="f in filtrados" :key="f.id" :href="f.id + '/editar/'">
-                <span class="row-icon row-icon--dark">🏭</span>
+                <span class="row-icon row-icon--dark">{% icono 'fornecedores' %}</span>
                 <span class="row-text">
                     <span class="row-title">[[ f.nome ]]</span>
                     <span class="row-subtitle">[[ [f.codigo, f.contato, f.telefone, f.email].filter(Boolean).join(' · ') || 'Sem contato' ]]</span>

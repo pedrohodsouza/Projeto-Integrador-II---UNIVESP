@@ -1,0 +1,53 @@
+{% if user.is_authenticated %}
+{% with current_name=request.resolver_match.url_name %}
+<nav class="topnav" aria-label="Navegação principal" data-topnav>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="topnav-panel" aria-label="Abrir menu de navegação">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+    </button>
+
+    <div class="topnav-panel" id="topnav-panel" data-topnav-panel>
+        <ul class="topnav-list">
+            <li class="topnav-item">
+                <a href="{% url 'home' %}" {% if current_name == 'home' %}class="is-active" aria-current="page"{% endif %}>Início</a>
+            </li>
+
+            <li class="topnav-item">
+                <a href="{% url 'atendimento_list' %}" {% if current_name == 'atendimento_list' or current_name == 'atendimento_create' or current_name == 'atendimento_detail' or current_name == 'atendimento_edit' or current_name == 'atendimento_status' or current_name == 'atendimento_item_add' or current_name == 'atendimento_item_delete' %}class="is-active" aria-current="page"{% endif %}>Atendimentos</a>
+            </li>
+
+            <li class="topnav-item topnav-item--submenu {% if current_name == 'peca_list' or current_name == 'peca_create' or current_name == 'peca_detail' or current_name == 'peca_edit' or current_name == 'peca_movimentar' or current_name == 'peca_delete' or current_name == 'fornecedor_list' or current_name == 'fornecedor_create' or current_name == 'fornecedor_edit' or current_name == 'fornecedor_delete' or current_name == 'movimentacao_list' %}is-open{% endif %}">
+                <button type="button" class="nav-submenu-toggle {% if current_name == 'peca_list' or current_name == 'peca_create' or current_name == 'peca_detail' or current_name == 'peca_edit' or current_name == 'peca_movimentar' or current_name == 'peca_delete' or current_name == 'fornecedor_list' or current_name == 'fornecedor_create' or current_name == 'fornecedor_edit' or current_name == 'fornecedor_delete' or current_name == 'movimentacao_list' %}is-active{% endif %}" aria-expanded="{% if current_name == 'peca_list' or current_name == 'peca_create' or current_name == 'peca_detail' or current_name == 'peca_edit' or current_name == 'peca_movimentar' or current_name == 'peca_delete' or current_name == 'fornecedor_list' or current_name == 'fornecedor_create' or current_name == 'fornecedor_edit' or current_name == 'fornecedor_delete' or current_name == 'movimentacao_list' %}true{% else %}false{% endif %}" aria-controls="submenu-estoque">
+                    Estoque
+                    <span class="nav-chevron" aria-hidden="true"></span>
+                </button>
+                <ul class="nav-submenu" id="submenu-estoque">
+                    <li>
+                        <a href="{% url 'peca_list' %}" {% if current_name == 'peca_list' or current_name == 'peca_create' or current_name == 'peca_detail' or current_name == 'peca_edit' or current_name == 'peca_movimentar' or current_name == 'peca_delete' or current_name == 'movimentacao_list' %}class="is-active" aria-current="page"{% endif %}>Peças</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'fornecedor_list' %}" {% if current_name == 'fornecedor_list' or current_name == 'fornecedor_create' or current_name == 'fornecedor_edit' or current_name == 'fornecedor_delete' %}class="is-active" aria-current="page"{% endif %}>Fornecedores</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="topnav-item topnav-item--submenu {% if current_name == 'cliente_list' or current_name == 'cliente_create' or current_name == 'cliente_edit' or current_name == 'cliente_delete' or current_name == 'veiculo_list' or current_name == 'veiculo_create' or current_name == 'veiculo_edit' or current_name == 'veiculo_delete' %}is-open{% endif %}">
+                <button type="button" class="nav-submenu-toggle {% if current_name == 'cliente_list' or current_name == 'cliente_create' or current_name == 'cliente_edit' or current_name == 'cliente_delete' or current_name == 'veiculo_list' or current_name == 'veiculo_create' or current_name == 'veiculo_edit' or current_name == 'veiculo_delete' %}is-active{% endif %}" aria-expanded="{% if current_name == 'cliente_list' or current_name == 'cliente_create' or current_name == 'cliente_edit' or current_name == 'cliente_delete' or current_name == 'veiculo_list' or current_name == 'veiculo_create' or current_name == 'veiculo_edit' or current_name == 'veiculo_delete' %}true{% else %}false{% endif %}" aria-controls="submenu-cadastros">
+                    Cadastros
+                    <span class="nav-chevron" aria-hidden="true"></span>
+                </button>
+                <ul class="nav-submenu" id="submenu-cadastros">
+                    <li>
+                        <a href="{% url 'cliente_list' %}" {% if current_name == 'cliente_list' or current_name == 'cliente_create' or current_name == 'cliente_edit' or current_name == 'cliente_delete' %}class="is-active" aria-current="page"{% endif %}>Clientes</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'veiculo_list' %}" {% if current_name == 'veiculo_list' or current_name == 'veiculo_create' or current_name == 'veiculo_edit' or current_name == 'veiculo_delete' %}class="is-active" aria-current="page"{% endif %}>Veículos</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endwith %}
+{% endif %}

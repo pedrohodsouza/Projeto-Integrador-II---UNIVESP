@@ -1,6 +1,11 @@
 {% extends "oficina/base.html" %}
+{% load static %}
 
 {% block title %}{% if peca %}Editar peça{% else %}Nova peça{% endif %} - Oficina Mecânica{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'oficina/css/pages/estoque.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="page">

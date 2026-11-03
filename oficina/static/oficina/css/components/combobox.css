@@ -1,0 +1,121 @@
+/* ==========================================================
+   Oficina360 – Componente: Combobox Pesquisável (Vue.js)
+   Dropdown interativo com busca, seleção e navegação por teclado.
+   ========================================================== */
+
+select.combobox-original {
+    display: none !important;
+}
+
+.combobox {
+    position: relative;
+    width: 100%;
+}
+
+.combobox-campo {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-card .combobox-entrada,
+.combobox-entrada {
+    width: 100%;
+    padding: 0.65rem 3.6rem 0.65rem 0.85rem;
+    border: 1.5px solid var(--cor-borda);
+    background: var(--cor-fundo);
+    border-radius: 8px;
+    font-family: var(--font-base);
+    font-size: 0.95rem;
+    color: var(--cor-texto-primario);
+    text-overflow: ellipsis;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.combobox-entrada:focus {
+    outline: none;
+    border-color: var(--azul-tecnologia);
+    background: var(--cor-fundo-card);
+    box-shadow: 0 0 0 3px var(--azul-tecnologia-foco);
+}
+
+.combobox-seta,
+.combobox-limpar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cor-texto-secundario);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.combobox-seta {
+    right: 0.75rem;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.combobox-limpar {
+    right: 2rem;
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    padding: 0.1rem 0.3rem;
+    color: var(--cor-texto-suave);
+}
+
+.combobox-limpar:hover {
+    color: var(--cor-erro);
+}
+
+.combobox.is-aberto .combobox-seta {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.combobox-lista {
+    position: absolute;
+    z-index: 50;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    background: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 45, 91, 0.12);
+}
+
+.combobox-opcao {
+    padding: 0.55rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    color: var(--cor-texto-primario);
+    transition: background-color 0.15s ease;
+}
+
+.combobox-opcao.is-ativa {
+    background: var(--cor-fundo);
+}
+
+.combobox-opcao.is-selecionada {
+    font-weight: 600;
+    color: var(--azul-tecnologia);
+}
+
+.combobox-opcao mark {
+    background: #FEF08A;
+    color: inherit;
+    border-radius: 2px;
+}
+
+.combobox-vazio {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+    text-align: center;
+}
