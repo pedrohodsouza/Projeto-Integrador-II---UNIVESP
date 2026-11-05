@@ -28,6 +28,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            request.session.set_expiry(None if request.POST.get('remember') else 0)
             return redirect('home')
         messages.error(request, 'Usuário ou senha inválidos.')
 

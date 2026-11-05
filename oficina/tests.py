@@ -9,6 +9,42 @@ from django.utils import timezone
 from .models import Atendimento, Cliente, Fornecedor, ItemAtendimento, MovimentacaoEstoque, Peca, Veiculo
 
 
+class LoginTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('login-teste', password='senha-teste')
+
+    def test_login_carrega_nova_tela(self):
+        resposta = self.client.get(reverse('login'))
+        self.assertContains(resposta, 'Bem-vindo ao Sistema')
+        self.assertContains(resposta, 'data-password-toggle')
+        self.assertContains(resposta, 'data-accessibility-toggle')
+        self.assertContains(resposta, 'oficina-acessibilidade')
+        self.assertContains(resposta, 'href="/static/oficina/css/style.css?v=20261104-4"')
+        self.assertContains(resposta, 'src="/static/oficina/js/main.js?v=20261104-2"')
+
+    def test_usuario_autenticado_tem_controle_de_acessibilidade(self):
+        self.client.force_login(self.user)
+        resposta = self.client.get(reverse('home'))
+        self.assertContains(resposta, 'data-accessibility-toggle')
+
+    def test_login_sem_lembrar_encerra_sessao_ao_fechar_navegador(self):
+        resposta = self.client.post(reverse('login'), {
+            'username': 'login-teste',
+            'password': 'senha-teste',
+        })
+        self.assertRedirects(resposta, reverse('home'))
+        self.assertTrue(self.client.session.get_expire_at_browser_close())
+
+    def test_login_com_lembrar_mantem_sessao(self):
+        resposta = self.client.post(reverse('login'), {
+            'username': 'login-teste',
+            'password': 'senha-teste',
+            'remember': 'on',
+        })
+        self.assertRedirects(resposta, reverse('home'))
+        self.assertFalse(self.client.session.get_expire_at_browser_close())
+
+
 class AtendimentoTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('mecanico', password='senha-teste', first_name='Carlos')

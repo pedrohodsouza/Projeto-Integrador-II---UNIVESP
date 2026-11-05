@@ -35,79 +35,345 @@ a {
 
 /* Login */
 
-.content-area--guest {
+.content-area.content-area--guest {
     padding: 0;
+    max-width: none;
 }
 
 .login-page {
-    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    background: #fff;
+}
+
+.login-brand {
+    flex: 0 0 60%;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: #fff;
+    text-align: center;
+    background: linear-gradient(145deg, #19334f 0%, #274f75 100%);
+}
+
+.login-brand-content {
+    width: 100%;
+    max-width: 560px;
+}
+
+.login-brand-mark {
+    width: 220px;
+    margin: 0 auto 1.1rem;
+    color: #f27b35;
+}
+
+.login-brand-mark svg {
+    display: block;
+    width: 100%;
+    fill: currentColor;
+}
+
+.login-brand-title {
+    margin: 0;
+    font-size: clamp(1.7rem, 3.2vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+}
+
+.login-brand-subtitle {
+    margin: 0.25rem 0 0;
+    color: #f27b35;
+    font-size: clamp(1.55rem, 3.2vw, 3rem);
+    font-weight: 300;
+    letter-spacing: 0.2em;
+}
+
+.login-brand-rule {
+    display: block;
+    width: 112px;
+    height: 3px;
+    margin: 1.3rem auto;
+    background: #f27b35;
+}
+
+.login-brand-tagline {
+    margin: 0;
+    color: #d3deea;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.login-brand-footer {
+    display: grid;
+    gap: 0.6rem;
+    margin: 4rem 0 0;
+    color: #c4d2e0;
+    font-size: 0.9rem;
+}
+
+.login-brand-footer p {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
-    background: var(--cor-primaria-escura);
+    gap: 0.65rem;
+    margin: 0;
+}
+
+.login-brand-footer svg {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    fill: #f27b35;
 }
 
 .login-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    margin: 0;
+    padding: 3rem clamp(2rem, 5vw, 5.5rem);
     background: #fff;
-    padding: 2.5rem;
-    border-radius: 14px;
+}
+
+.login-form-content {
     width: 100%;
-    max-width: 340px;
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+    max-width: 470px;
 }
 
 .login-card h1 {
-    margin: 0 0 0.25rem;
-    font-size: 1.4rem;
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.6rem, 2.2vw, 2rem);
+    line-height: 1.25;
 }
 
 .login-card .subtitle {
-    margin: 0 0 1.5rem;
-    color: var(--cor-texto-secundario);
+    margin: 0 0 2.2rem;
+    color: #64748b;
 }
 
 .login-card label {
     display: block;
-    margin-bottom: 0.3rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--cor-primaria);
+    margin-bottom: 0.45rem;
+    color: #172b43;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .login-card input {
     width: 100%;
-    padding: 0.65rem 0.85rem;
-    margin-bottom: 1rem;
-    border: 1px solid var(--cor-fundo-secundario);
-    background: var(--cor-fundo);
-    border-radius: 10px;
+    min-height: 54px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #dce2e8;
+    background: #fff;
+    border-radius: 12px;
     font-family: var(--font-base);
     font-size: 1rem;
 }
 
 .login-card input:focus {
     outline: none;
-    border-color: var(--cor-accent);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: #315b82;
+    box-shadow: 0 0 0 3px rgba(49, 91, 130, 0.14);
 }
 
-.login-card button {
+.login-form-content > input {
+    margin-bottom: 1.45rem;
+}
+
+.login-password-field {
+    position: relative;
+    margin-bottom: 1.45rem;
+}
+
+.login-password-field input {
+    padding-right: 3.2rem;
+}
+
+.login-card .password-visibility {
+    position: absolute;
+    top: 50%;
+    right: 0.8rem;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+    transform: translateY(-50%);
+    place-items: center;
+    color: #64748b;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.password-visibility svg {
     width: 100%;
-    padding: 0.75rem;
-    background: var(--cor-destaque);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.1rem 0 1.7rem;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.login-card .remember-option {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    color: #64748b;
+    font-size: inherit;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.login-card .remember-option input {
+    width: 16px;
+    min-height: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #1d4164;
+}
+
+.login-help {
+    text-align: right;
+}
+
+.login-card .login-submit {
+    width: 100%;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    padding: 0.8rem;
+    background: #1d4164;
     color: #fff;
     border: none;
-    border-radius: 10px;
+    border-radius: 11px;
     font-family: var(--font-base);
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
 }
 
-.login-card button:hover {
-    background: var(--cor-destaque-escura);
+.login-submit svg {
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
+}
+
+.login-card .login-submit:hover {
+    background: #163451;
+}
+
+.login-form-footer {
+    margin-top: 2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid #e6e9ed;
+    color: #64748b;
+    text-align: center;
+}
+
+.content-area--guest > .messages {
+    position: fixed;
+    z-index: 2;
+    top: 1rem;
+    right: 1rem;
+    width: min(440px, calc(100% - 2rem));
+}
+
+@media (max-width: 900px) {
+    .login-page {
+        flex-direction: column;
+    }
+
+    .login-brand {
+        flex: 0 0 auto;
+        min-height: 270px;
+        padding: 2rem 1.5rem;
+    }
+
+    .login-brand-mark {
+        width: 90px;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-brand-title {
+        font-size: 1.45rem;
+    }
+
+    .login-brand-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .login-brand-rule {
+        margin: 0.8rem auto;
+    }
+
+    .login-brand-footer {
+        display: grid;
+        margin-top: 1.5rem;
+        font-size: 0.8rem;
+    }
+
+    .login-brand-footer p:first-child,
+    .login-brand-footer p:last-child {
+        display: none;
+    }
+
+    .login-card {
+        padding: 2.5rem 1.5rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .login-options {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .login-help {
+        text-align: left;
+    }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+    .login-brand {
+        padding: 2rem;
+    }
+
+    .login-brand-title {
+        font-size: 2rem;
+        letter-spacing: 0.06em;
+    }
+
+    .login-brand-subtitle {
+        font-size: 1.8rem;
+        letter-spacing: 0.16em;
+    }
+
+    .login-card {
+        padding-right: 2.5rem;
+        padding-left: 2.5rem;
+    }
+
+    .login-card h1 {
+        font-size: 1.65rem;
+    }
 }
 
 /* Alerts */
@@ -150,6 +416,48 @@ a {
     font-weight: 700;
     font-size: 1rem;
     text-decoration: none;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.accessibility-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 42px;
+    padding: 0.45rem 0.8rem;
+    border: 2px solid currentColor;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font: 600 0.9rem var(--font-base);
+    cursor: pointer;
+}
+
+.accessibility-toggle svg {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+}
+
+.accessibility-toggle:focus-visible {
+    outline: 3px solid #FDE047;
+    outline-offset: 3px;
+}
+
+.login-accessibility-toggle {
+    position: absolute;
+    z-index: 2;
+    top: 1rem;
+    right: 1rem;
+    border-color: #1d4164;
+    background: #fff;
+    color: #1d4164;
 }
 
 /* User menu (top-right dropdown) */
@@ -1149,3 +1457,184 @@ select.combobox-original {
 }
 
 .header-actions form { margin: 0; }
+
+html.accessibility-mode {
+    font-size: 112.5%;
+    --cor-primaria: #fff;
+    --cor-primaria-escura: #fff;
+    --cor-destaque: #ff0;
+    --cor-destaque-escura: #ff0;
+    --cor-accent: #0ff;
+    --cor-fundo: #000;
+    --cor-fundo-secundario: #444;
+    --cor-texto-secundario: #fff;
+    color-scheme: dark;
+}
+
+html.accessibility-mode body {
+    background: #000;
+    color: #fff;
+}
+
+html.accessibility-mode body * {
+    color: #fff;
+    border-color: #fff;
+}
+
+html.accessibility-mode a {
+    color: #0ff;
+}
+
+html.accessibility-mode .topbar,
+html.accessibility-mode .content-area,
+html.accessibility-mode .login-page,
+html.accessibility-mode .login-card {
+    background: #000;
+}
+
+html.accessibility-mode .topbar-title,
+html.accessibility-mode .topbar .accessibility-toggle {
+    color: #ff0;
+}
+
+html.accessibility-mode .login-brand {
+    background: #000;
+    border: 2px solid #fff;
+}
+
+html.accessibility-mode .login-brand-subtitle,
+html.accessibility-mode .login-brand-mark,
+html.accessibility-mode .login-brand-footer svg {
+    color: #ff0;
+    fill: #ff0;
+}
+
+html.accessibility-mode .login-brand-rule {
+    background-color: #ff0;
+}
+
+html.accessibility-mode .login-brand-tagline,
+html.accessibility-mode .login-brand-footer {
+    color: #fff;
+}
+
+html.accessibility-mode .login-card h1,
+html.accessibility-mode .login-card label,
+html.accessibility-mode .login-card .subtitle,
+html.accessibility-mode .login-help,
+html.accessibility-mode .login-form-footer {
+    color: #fff;
+}
+
+html.accessibility-mode .group-card,
+html.accessibility-mode .form-card,
+html.accessibility-mode .table-wrap,
+html.accessibility-mode .stat,
+html.accessibility-mode .panel,
+html.accessibility-mode .user-dropdown,
+html.accessibility-mode .segmented,
+html.accessibility-mode .combobox-lista,
+html.accessibility-mode .os-card,
+html.accessibility-mode .board-col,
+html.accessibility-mode .board-count {
+    background: #111;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+html.accessibility-mode .group-row,
+html.accessibility-mode .table th,
+html.accessibility-mode .table td,
+html.accessibility-mode .table tfoot td,
+html.accessibility-mode .board-col-header,
+html.accessibility-mode .dropdown-account,
+html.accessibility-mode .dropdown-item,
+html.accessibility-mode .combobox-opcao,
+html.accessibility-mode .combobox-opcao.is-ativa {
+    background: #111;
+    color: #fff;
+    border-color: #fff;
+}
+
+html.accessibility-mode input,
+html.accessibility-mode select,
+html.accessibility-mode textarea,
+html.accessibility-mode .search-input,
+html.accessibility-mode .combobox-entrada,
+html.accessibility-mode .toolbar select {
+    background: #000;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+html.accessibility-mode input::placeholder,
+html.accessibility-mode textarea::placeholder {
+    color: #ddd;
+    opacity: 1;
+}
+
+html.accessibility-mode input:focus,
+html.accessibility-mode select:focus,
+html.accessibility-mode textarea:focus,
+html.accessibility-mode button:focus-visible,
+html.accessibility-mode a:focus-visible {
+    outline: 3px solid #ff0;
+    outline-offset: 3px;
+    box-shadow: none;
+}
+
+html.accessibility-mode .btn,
+html.accessibility-mode .login-submit,
+html.accessibility-mode .accessibility-toggle[aria-pressed="true"],
+html.accessibility-mode .segmented button.is-active,
+html.accessibility-mode .segmented-link.is-active {
+    background: #ff0;
+    color: #000;
+    border: 2px solid #ff0;
+}
+
+html.accessibility-mode .btn-secondary,
+html.accessibility-mode .login-accessibility-toggle {
+    background: #000;
+    color: #ff0;
+    border: 2px solid #ff0;
+}
+
+html.accessibility-mode .badge,
+html.accessibility-mode [class*="badge-"] {
+    background: #000;
+    color: #ff0;
+    border: 1px solid #ff0;
+}
+
+html.accessibility-mode .alert-error,
+html.accessibility-mode .alert-success {
+    background: #000;
+    color: #ff0;
+    border: 2px solid #ff0;
+}
+
+@media (max-width: 520px) {
+    .topbar {
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+    }
+
+    .topbar-actions {
+        gap: 0.5rem;
+    }
+
+    .topbar .accessibility-toggle {
+        width: 44px;
+        padding: 0.45rem;
+    }
+
+    .topbar .accessibility-toggle span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+}
