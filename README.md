@@ -81,6 +81,7 @@ Projeto desenvolvido pelos alunos da Universidade Virtual do Estado de São Paul
 - Matheus Santos Moitinho
 - Fabiano Inácio
 - João Vitor Chaves Romão de Souza
+- Alexandre Silva da Costa
 
 **Tutor(a):** Marco Tulio Vilela Bueno Jardim
 **Ano:** 2026
